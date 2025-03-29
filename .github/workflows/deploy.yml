@@ -45,14 +45,6 @@ jobs:
         working-directory: ./backend
         run: chmod +x mvnw
 
-      - name: Build Spring Boot backend
-        working-directory: ./backend
-        run: mvn clean package -DskipTests
-        env:
-          SPRING_DATASOURCE_URL: jdbc:mariadb://localhost:3306/securecapita
-          SPRING_DATASOURCE_USERNAME: delta
-          SPRING_DATASOURCE_PASSWORD: delta
-
       - name: Build Angular frontend
         working-directory: ./frontend
         run: |
