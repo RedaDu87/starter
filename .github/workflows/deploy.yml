@@ -15,6 +15,8 @@ jobs:
         env:
           MYSQL_ROOT_PASSWORD: root
           MYSQL_DATABASE: securecapita
+          MYSQL_USER: delta
+          MYSQL_PASSWORD: delta
         ports:
           - 3306:3306
         options: >-
@@ -47,8 +49,8 @@ jobs:
         run: ./mvnw clean package -DskipTests
         env:
           SPRING_DATASOURCE_URL: jdbc:mariadb://localhost:3306/securecapita
-          SPRING_DATASOURCE_USERNAME: root
-          SPRING_DATASOURCE_PASSWORD: root
+          SPRING_DATASOURCE_USERNAME: delta
+          SPRING_DATASOURCE_PASSWORD: delta
 
       - name: Build Angular frontend
         working-directory: ./frontend
@@ -88,6 +90,7 @@ jobs:
             docker login -u "${{ secrets.DOCKER_USERNAME }}" -p "${{ secrets.DOCKER_PASSWORD }}"
             cd /home/${{ secrets.SSH_USER }}/securecapita
             git pull origin main
+          
             docker compose pull
             docker compose down
             docker compose up -d --build
