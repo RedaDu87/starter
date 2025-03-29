@@ -29,6 +29,12 @@ spring:
      init:
        mode: never
        continue-on-error: false
+  logging:
+    level:
+      org:
+        springframework:
+          web:
+            cors=DEBUG:
   mail:
     host: smtp.gmail.com
     port: 587
