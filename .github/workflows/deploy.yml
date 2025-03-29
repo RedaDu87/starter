@@ -35,6 +35,11 @@ jobs:
           java-version: '21'
           distribution: 'temurin'
 
+      - name: Set up Maven
+        uses: s4u/setup-maven-action@v1
+        with:
+          maven-version: '3.9.6'
+
       - name: Set up Node.js
         uses: actions/setup-node@v3
         with:
@@ -46,7 +51,7 @@ jobs:
 
       - name: Build Spring Boot backend
         working-directory: ./backend
-        run: ./mvnw clean package -DskipTests
+        run: mvn clean package -DskipTests
         env:
           SPRING_DATASOURCE_URL: jdbc:mariadb://localhost:3306/securecapita
           SPRING_DATASOURCE_USERNAME: delta
