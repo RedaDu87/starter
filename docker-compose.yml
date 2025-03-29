@@ -8,11 +8,6 @@ services:
     environment:
       MYSQL_ROOT_PASSWORD: root
       MYSQL_DATABASE: securecapita
-    healthcheck:
-      test: [ "CMD", "mysqladmin", "ping", "-h", "localhost" ]
-      interval: 10s
-      timeout: 10s
-      retries: 10
     ports:
       - "3307:3306"
     volumes:
@@ -23,8 +18,7 @@ services:
       context: ./backend
     container_name: securecapita-backend
     depends_on:
-      mariadb:
-        condition: service_healthy
+      - mariadb
     ports:
       - "8080:8080"
     environment:
