@@ -35,9 +35,10 @@ public class Application {
 	public CorsFilter corsFilter() {
 		UrlBasedCorsConfigurationSource urlBasedCorsConfigurationSource = new UrlBasedCorsConfigurationSource();
 		CorsConfiguration corsConfiguration = new CorsConfiguration();
+		configuration.setAllowedOriginPatterns(List.of("*"));
 		corsConfiguration.setAllowCredentials(true);
-		corsConfiguration.setAllowedOrigins(List.of("http://vps-27d6c134.vps.ovh.net:4200", "http://vps-27d6c134.vps.ovh.net:3000", "http://coran-hadith.fr"));
-		corsConfiguration.setAllowedOrigins(Arrays.asList("*"));
+		//corsConfiguration.setAllowedOrigins(List.of("http://vps-27d6c134.vps.ovh.net:4200", "http://vps-27d6c134.vps.ovh.net:3000", "http://coran-hadith.fr"));
+		//corsConfiguration.setAllowedOrigins(Arrays.asList("*"));
 		corsConfiguration.setAllowedHeaders(Arrays.asList("Origin", "Access-Control-Allow-Origin", "Content-Type",
 				"Accept", "Jwt-Token", "Authorization", "Origin", "Accept", "X-Requested-With",
 				"Access-Control-Request-Method", "Access-Control-Request-Headers"));
