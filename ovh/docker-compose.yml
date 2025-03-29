@@ -1,0 +1,81 @@
+version: '3.8'
+
+services:
+  traefik:
+    image: traefik:v2.10
+    command:
+      - "--api.insecure=true"
+      - "--providers.docker"
+      - "--api.dashboard=true"
+      - "--entrypoints.web.address=:80"
+      - "--entrypoints.websecure.address=:443"
+      - "--entrypoints.traefik.address=:8080"
+      - "--certificatesresolvers.myresolver.acme.httpchallenge.entrypoint=web"
+      - "--certificatesresolvers.myresolver.acme.email=reda.berkouch@live.fr"
+      - "--certificatesresolvers.myresolver.acme.storage=/letsencrypt/acme.json"
+    ports:
+      - "80:80"
+      - "443:443"
+      - "8080:8080"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - /letsencrypt:/letsencrypt
+    networks:
+      - web
+
+  mariadb:
+    image: mariadb:latest
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: ma_base_de_donnees
+      MYSQL_USER: delta
+      MYSQL_PASSWORD: delta
+    volumes:
+      - mariadb-data:/var/lib/mysql
+    networks:
+      - internal
+
+  backend:
+    image: anikondu87/myproject-backend:latest
+    deploy:
+      replicas: 1
+    labels:
+      - "traefik.enable=false"
+    networks:
+      - web
+      - internal
+
+  frontend:
+    image: anikondu87/myproject-frontend:latest
+    deploy:
+      replicas: 1
+    labels:
+
+      - "traefik.enable=true"
+
+      - "traefik.http.routers.frontend.rule=Host(`coran-hadith.fr`, `www.coran-hadith.fr`)"
+      - "traefik.http.routers.frontend.entrypoints=websecure"
+      - "traefik.http.routers.frontend.tls.certresolver=myresolver"
+      - "traefik.http.routers.frontend.middlewares=redirect-to-https,redirect-to-non-www"
+
+      - "traefik.http.routers.frontend-http.entrypoints=web"
+      - "traefik.http.routers.frontend-http.rule=Host(`coran-hadith.fr`, `www.coran-hadith.fr`)"
+      - "traefik.http.middlewares.redirect-to-https.redirectscheme.scheme=https"
+
+      - "traefik.http.middlewares.redirect-to-non-www.redirectregex.regex=^https://www\\.(.*)"
+      - "traefik.http.middlewares.redirect-to-non-www.redirectregex.replacement=https://$$1"
+
+
+    networks:
+      - web
+
+
+
+networks:
+  web:
+    external: true
+  internal:
+    driver: overlay
+
+volumes:
+  mariadb-data:

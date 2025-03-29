@@ -1,0 +1,17 @@
+entryPoints:
+  web:
+    address: ":80"
+  websecure:
+    address: ":443"
+
+certificatesResolvers:
+  myresolver:
+    acme:
+      email: "reda.berkouch@live.fr"
+      storage: "/letsencrypt/acme.json"
+      httpChallenge:
+        entryPoint: "web"  # Le challenge HTTP doit être écouté sur le port 80
+
+providers:
+  docker:
+    exposedByDefault: false
