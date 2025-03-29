@@ -29,16 +29,12 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
 
-      - name: Set up JDK 21
+      - name: Set up Java & Maven
         uses: actions/setup-java@v3
         with:
           java-version: '21'
           distribution: 'temurin'
-
-      - name: Set up Maven
-        uses: s4u/setup-maven-action@v1
-        with:
-          maven-version: '3.9.6'
+          cache: 'maven'
 
       - name: Set up Node.js
         uses: actions/setup-node@v3
