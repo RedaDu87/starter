@@ -75,16 +75,19 @@ jobs:
       - name: Install SSH client
         run: sudo apt-get install -y sshpass
 
-      - name: Deploy to remote server via SSH
+      - name: Deploy to remote Docker Swarm via SSH
         env:
           SSHPASS: ${{ secrets.SSH_PASS }}
         run: |
           sshpass -e ssh -o StrictHostKeyChecking=no ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} << EOF
             docker login -u "${{ secrets.DOCKER_USERNAME }}" -p "${{ secrets.DOCKER_PASSWORD }}"
+
+            # Se placer dans le répertoire de la stack
             cd /home/${{ secrets.SSH_USER }}/securecapita
+
+            # Pull les dernières sources
             git pull origin main
-          
-            docker compose pull
-            docker compose down
-            docker compose up -d --build
+
+            # Déployer ou mettre à jour la stack Docker Swarm
+            docker stack deploy -c docker-compose.yml securecapita
           EOF
