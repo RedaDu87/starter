@@ -30,7 +30,8 @@ services:
         - "traefik.http.routers.api.service=api@internal"
         - "traefik.http.routers.api.entrypoints=websecure"
         - "traefik.http.routers.api.tls.certresolver=myresolver"
-        - "traefik.http.services.dummy-svc.loadbalancer.server.port=9999"
+        - "traefik.http.services.traefik_dummy.loadbalancer.server.port=9999"
+
 
     networks:
       - traefik_net
