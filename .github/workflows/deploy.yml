@@ -82,6 +82,9 @@ jobs:
           sshpass -e ssh -o StrictHostKeyChecking=no ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} << EOF
             docker login -u "${{ secrets.DOCKER_USERNAME }}" -p "${{ secrets.DOCKER_PASSWORD }}"
 
+            docker network inspect traefik_net >/dev/null 2>&1 || docker network create --driver=overlay --attachable traefik_net
+            docker network inspect securecapita_net >/dev/null 2>&1 || docker network create --driver=overlay --attachable securecapita_net
+
             # Se placer dans le répertoire de la stack
             cd /home/${{ secrets.SSH_USER }}/securecapita
 
