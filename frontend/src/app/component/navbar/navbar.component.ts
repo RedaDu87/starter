@@ -17,7 +17,7 @@ export class NavbarComponent {
 
   logOut(): void {
     this.userService.logOut();
-    this.router.navigate(['/login']);
+    this.router.navigate(['/']);
     this.notification.onDefault('You\'ve been successfully logged out');
   }
 

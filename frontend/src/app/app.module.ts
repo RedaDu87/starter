@@ -9,6 +9,10 @@ import { CustomerModule } from './component/customer/customer.module';
 import { HomeModule } from './component/home/home.module';
 import { InvoiceModule } from './component/invoice/invoice.module';
 import { NotificationModule } from './notification.module';
+import {IslamModule} from "./component/islam/islam.module";
+import {PublicHomeModule} from "./component/public-home/public-home.module";
+
+
 
 @NgModule({
   declarations: [ AppComponent ],
@@ -18,9 +22,9 @@ import { NotificationModule } from './notification.module';
     AuthModule,
     CustomerModule,
     InvoiceModule,
-    HomeModule,    
+    HomeModule,
     AppRoutingModule,
-    NotificationModule
+    NotificationModule,IslamModule,PublicHomeModule
   ],
   bootstrap: [AppComponent]
 })

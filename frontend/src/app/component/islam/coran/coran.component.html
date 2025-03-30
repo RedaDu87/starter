@@ -1,0 +1,67 @@
+<div class="conteneurDeBase">
+  <!-- Barre de sélection de la sourate -->
+  <div class="libelle">
+    <div class="select">
+      <select class="box" [(ngModel)]="myDropDown" (ngModelChange)="onChangeofOptions($event)">
+        <option *ngFor="let sourah of listeSourah.data" value="{{sourah.number}}">
+          {{sourah.name}} - {{sourah.number}} - {{sourah.englishName}}
+        </option>
+      </select>
+    </div>
+
+    <div class="controls">
+      <button class="icon-button  " (click)="playayaAr()">
+        <i class="fas fa-play"></i>
+      </button>
+      <button class="icon-button " (click)="playayaFr()">
+        <i class="fas fa-play"></i>
+      </button>
+      <button class="icon-button " (click)="pauseaya()">
+        <i class="fas fa-pause" style="color: antiquewhite"></i>
+      </button>
+      <button class="icon-button " (click)="reprendreaya()">
+        <i class="fas fa-redo"></i>
+      </button>
+    </div>
+
+    <div class="checkboxes">
+      <label for="arab">Arabe</label>
+      <input type="checkbox" id="arab" [(ngModel)]="isArabChecked">
+      <label for="fr">Français</label>
+      <input type="checkbox" id="fr" [(ngModel)]="isFrChecked">
+      <label for="translit">Translitération</label>
+      <input type="checkbox" id="translit" [(ngModel)]="isTransChecked">
+    </div>
+  </div>
+
+  <!-- Liste des versets -->
+  <div class="aya-container" *ngFor="let aya of sourah.ayas; index as i" id="{{i+1}}" #ayaElement>
+    <div class="aya-header">
+      <p>{{i+1}} / {{sourah.ayas.length}}</p>
+    </div>
+
+    <!-- Affichage en arabe -->
+    <div *ngIf="isArabChecked" [ngClass]="{'highlight': i === currentIndex}" class="aya-content">
+      <p class="aya-text-ar">{{aya.ayaAr}}</p>
+      <button class="icon-button-aya" (click)="playanayaAr(i)" mattooltipe="Relire (Arabe)">
+        <i class="fas fa-redo"></i>
+      </button>
+    </div>
+
+    <!-- Affichage de la translitération -->
+    <div *ngIf="isTransChecked" class="aya-content">
+      <p class="aya-text">{{aya.ayatr}}</p>
+      <button class="icon-button-aya" (click)="playanayaAr(i)" mattooltipe="Relire (Arabe)">
+        <i class="fas fa-redo"></i>
+      </button>
+    </div>
+
+    <!-- Affichage en français -->
+    <div *ngIf="isFrChecked" [ngClass]="{'highlight': i === currentIndex}" class="aya-content">
+      <p class="aya-text">{{aya.ayaFr}}</p>
+      <button class="icon-button-aya" (click)="playanayaFr(i)" mattooltipe="Relire (Français)">
+        <i class="fas fa-redo"></i>
+      </button>
+    </div>
+  </div>
+</div>

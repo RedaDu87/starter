@@ -1,13 +1,18 @@
 import { NgModule } from '@angular/core';
 import { PreloadAllModules, RouterModule, Routes } from '@angular/router';
-import { HomeComponent } from './component/home/home/home.component';
 import { AuthenticationGuard } from './guard/authentication.guard';
 
 const routes: Routes = [
-  { path: 'profile', loadChildren: () => import('./component/profile/user.module').then(module => module.UserModule)},
-  { path: '', redirectTo: '/', pathMatch: 'full' },
-  { path: '**', component: HomeComponent, canActivate: [AuthenticationGuard] },
+  { path: '',
+    loadChildren: () => import('./component/public-home/public-home.module').then(m => m.PublicHomeModule) },
+  {
+    path: 'profile',
+    loadChildren: () => import('./component/profile/user.module').then(m => m.UserModule),
+    canActivate: [AuthenticationGuard]
+  },
+  { path: '**', redirectTo: '', pathMatch: 'full' }
 ];
+
 
 @NgModule({
   imports: [RouterModule.forRoot(routes, { preloadingStrategy: PreloadAllModules })],

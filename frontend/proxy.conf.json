@@ -1,0 +1,20 @@
+{
+  "/api-hadith": {
+    "target": "https://hadeethenc.com",
+    "secure": true,
+    "changeOrigin": true,
+    "logLevel": "debug",
+    "pathRewrite": {
+      "^/api-hadith": ""
+    }
+  },
+  "/api-quran": {
+    "target": "https://api.alquran.cloud",
+    "secure": true,
+    "changeOrigin": true,
+    "logLevel": "debug",
+    "pathRewrite": {
+      "^/api-quran": ""
+    }
+  }
+}

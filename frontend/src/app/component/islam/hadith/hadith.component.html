@@ -1,0 +1,42 @@
+<div class="conteneurDeBase">
+  <!-- Barre de sélection de la catégorie -->
+  <div class="header">
+    <div class="select-container">
+      <select class="select-box" [(ngModel)]="myDropDown" (ngModelChange)="onChangeofOptions($event)">
+        <option *ngFor="let cat of listeCategories" value="{{cat.id}}">{{cat.title}}</option>
+      </select>
+    </div>
+  </div>
+
+  <!-- Liste des hadiths -->
+  <div class="content-container">
+    <div class="aya-card" *ngFor="let had of listeHadiths; index as i">
+      <div class="aya-header">
+        <p>{{i + 1}} / {{listeHadiths.length}}</p>
+      </div>
+
+      <div class="aya-content">
+        <h1 class="aya-title">{{had.title}}</h1>
+        <button class="button-detail" (click)="openDialog(had)">Détail</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal dialog -->
+  <div *ngIf="isDialogOpen" class="modal-overlay" (click)="closeDialog()">
+    <div class="modal-content" (click)="$event.stopPropagation()">
+      <h2>{{selectedHadith?.title}}</h2>
+      <p>{{selectedHadith?.hadeeth}}</p>
+      <hr>
+      <p><strong>Attribution :</strong> {{selectedHadith?.attribution}}</p>
+      <p><strong>Grade :</strong> {{selectedHadith?.grade}}</p>
+      <hr>
+      <p>{{selectedHadith?.hadeeth_ar}}</p>
+      <p><strong>Explication (Arabe) :</strong> {{selectedHadith?.explanation_ar}}</p>
+      <p><strong>Grade (Arabe) :</strong> {{selectedHadith?.grade_ar}}</p>
+      <div class="modal-footer">
+        <button class="button-close" (click)="closeDialog()">Fermer</button>
+      </div>
+    </div>
+  </div>
+</div>

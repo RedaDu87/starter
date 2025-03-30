@@ -1,0 +1,247 @@
+/* Conteneur global */
+.conteneurDeBase {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  padding: 0px;
+  background-color: #f7f7f7;
+}
+
+/* Barre de sélection et contrôles */
+/* Conteneur global */
+/* Conteneur global avec fond foncé */
+.libelle {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  padding: 15px;
+  background-color: #333; /* Fond foncé */
+  color: white; /* Texte en blanc pour contraste */
+  box-sizing: border-box;
+  min-height: 10vh; /* Prend toute la hauteur de l'écran */
+  border-radius: 30px;
+  max-width: 1300px;
+}
+
+/* Select dropdown */
+.select {
+  width: 100%;
+  max-width: 1200px;
+  margin-bottom: 20px;
+}
+
+.select select {
+  width: 100%;
+  padding: 10px;
+  font-size: 1.5rem;
+  font-weight: bold;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+  background-color: #fff;
+  color: #333; /* Contraste pour le texte du dropdown */
+}
+
+/* Contrôles (boutons) */
+.controls {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  margin-bottom: 20px;
+}
+
+.icon-button {
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: white;
+  font-size: 1.2rem;
+  padding: 10px;
+  transition: transform 0.3s ease;
+}
+
+.icon-button-aya {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 1.2rem;
+  padding: 10px;
+  transition: transform 0.3s ease;
+}
+
+.icon-button:hover {
+  transform: scale(1.1);
+}
+
+/* Checkboxes centrées */
+.checkboxes {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  margin-top: 10px;
+  flex-wrap: nowrap; /* Toujours sur une ligne */
+}
+
+.checkboxes label {
+  margin-left: 10px;
+  margin-right: 10px;
+}
+
+input[type="checkbox"] {
+  margin-left: 5px;
+}
+
+/* Styles responsive pour petits écrans */
+@media (max-width: 768px) {
+  .libelle {
+    padding: 10px;
+  }
+
+  .controls {
+    justify-content: center; /* Centré au milieu */
+  }
+
+  .checkboxes {
+    justify-content: center; /* Centré au milieu */
+  }
+}
+
+
+@media (max-width: 480px) {
+  .select select {
+    font-size: 0.9rem;
+    padding: 8px;
+  }
+
+  .icon-button {
+    font-size: 1rem;
+    padding: 8px;
+  }
+}
+
+
+/* Icon button style */
+.icon-button {
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: white;
+  font-size: 1.5rem;
+  transition: transform 0.3s ease;
+}
+
+.icon-button:hover {
+  transform: scale(1.2);
+}
+
+.icon-button i {
+  pointer-events: none;
+}
+
+/* Container des versets */
+.aya-container {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  max-width: 1200px;
+  margin-bottom: 10px;
+  padding: 15px;
+  background-color: #ffffff;
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.aya-header {
+  font-weight: bold;
+  color: #555;
+  text-align: center;
+}
+
+/* Texte du verset */
+.aya-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 0;
+  background-color: #f0f0f0;
+  margin: 0px 0;
+  border-radius: 8px;
+}
+
+.aya-text-ar {
+  font-size: 2rem;
+  color: #333;
+  flex: 1;
+  text-align: center;
+}
+
+.aya-text {
+  font-size: 1.2rem;
+  color: #333;
+  flex: 1;
+  text-align: center;
+}
+
+/* Highlight verset en cours de lecture */
+.highlight {
+  background-color: rgba(255, 235, 59, 0.3);
+}
+
+/* Styles pour rendre le contenu responsive */
+@media (max-width: 768px) {
+  .header, .aya-container {
+    flex-direction: column;
+  }
+
+  .controls, .checkboxes {
+    margin-top: 10px;
+  }
+}
+/* Style de base pour l'icône du bouton */
+.icon-button {
+  position: relative;
+  border: none;
+  background: none;
+  cursor: pointer;
+}
+
+/* Conteneur du tooltipeee */
+.tooltipeee .tooltipeeetext {
+  visibility: hidden;
+  width: 120px; /* Largeur du tooltipeee */
+  background-color: #555; /* Couleur de fond */
+  color: #fff; /* Couleur du texte */
+  text-align: center;
+  font-size: 0.8rem;
+  border-radius: 5px;
+  padding: 5px;
+  position: absolute;
+  z-index: 1;
+  bottom: 125%; /* Positionner le tooltipeee au-dessus du bouton */
+  left: 50%;
+  margin-left: -60px; /* Centrer le tooltipeee */
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+
+/* Petite flèche du tooltipeee */
+.tooltipeee .tooltipeeetext::after {
+  content: "";
+  position: absolute;
+  top: 100%; /* En bas du tooltipeee */
+  left: 50%;
+  margin-left: -5px;
+  border-width: 5px;
+  border-style: solid;
+  border-color: #555 transparent transparent transparent;
+}
+
+/* Montrer le tooltipeee lors du hover */
+.tooltipeee:hover .tooltipeeetext {
+  visibility: visible;
+  opacity: 0.9;
+}

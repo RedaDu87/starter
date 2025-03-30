@@ -23,7 +23,7 @@ export class LoginComponent implements OnInit {
   constructor(private router: Router, private userService: UserService, private notification: NotificationService) {}
 
   ngOnInit(): void {
-    this.userService.isAuthenticated() ? this.router.navigate(['/']) : this.router.navigate(['/login']);
+    this.userService.isAuthenticated() ? this.router.navigate(['/home']) : this.router.navigate(['/login']);
   }
 
 
@@ -44,12 +44,12 @@ export class LoginComponent implements OnInit {
             this.notification.onDefault(response.message);
             localStorage.setItem(Key.TOKEN, response.data.access_token);
             localStorage.setItem(Key.REFRESH_TOKEN, response.data.refresh_token);
-            this.router.navigate(['/']);
+            this.router.navigate(['/home']);
             return { dataState: DataState.LOADED, loginSuccess: true };
           }
         }),
         startWith({ dataState: DataState.LOADING, isUsingMfa: false }),
-        catchError((error: string) => {          
+        catchError((error: string) => {
           this.notification.onError(error);
           return of({ dataState: DataState.ERROR, isUsingMfa: false, loginSuccess: false, error })
         })
@@ -63,7 +63,7 @@ export class LoginComponent implements OnInit {
           this.notification.onDefault(response.message);
           localStorage.setItem(Key.TOKEN, response.data.access_token);
           localStorage.setItem(Key.REFRESH_TOKEN, response.data.refresh_token);
-          this.router.navigate(['/']);
+          this.router.navigate(['/home']);
           return { dataState: DataState.LOADED, loginSuccess: true };
         }),
         startWith({ dataState: DataState.LOADING, isUsingMfa: true, loginSuccess: false,
