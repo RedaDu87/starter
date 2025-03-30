@@ -16,7 +16,7 @@ services:
     ports:
       - "80:80"
       - "443:443"
-      - "8081:8080" # Traefik dashboard
+      - "8081:8080"  # externe:interne pour accéder au dashboard
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock:ro
       - /opt/letsencrypt:/letsencrypt
@@ -30,11 +30,10 @@ services:
         - "traefik.http.routers.api.service=api@internal"
         - "traefik.http.routers.api.entrypoints=websecure"
         - "traefik.http.routers.api.tls.certresolver=myresolver"
-        - "traefik.http.services.traefik_dummy.loadbalancer.server.port=9999"
-
-
+        - "traefik.http.services.traefik.loadbalancer.server.port=8080"  # 🔥 Ajoute celle-ci !
     networks:
       - traefik_net
+
 
   mariadb:
     image: mariadb:11
