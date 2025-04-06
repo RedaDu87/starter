@@ -1,45 +1,106 @@
-<!-- Navigation-->
-<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+<!-- Navigation -->
+<nav class="navbar navbar-expand-lg navbar-light bg-dark">
   <div class="container-fluid">
-    <a class="navbar-brand" [routerLink]="['/']">
-      <i class="bi bi-safe me-2"></i>
-      SecureCapita
+    <!-- Logo et Nom de la Marque aligné à gauche -->
+    <a class="navbar-brand d-flex align-items-center" [routerLink]="['/']">
+      <i class="bi bi-safe me-2" style="font-size: 1.5rem;"></i>
+      <span class="fs-4 text-white">SecureCapita</span>
     </a>
+
+    <!-- Toggler pour les petits écrans -->
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
             data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
             aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
 
+    <!-- Menu de navigation -->
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
-      <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+      <ul class="navbar-nav mx-auto mb-2 mb-lg-0">
 
+        <!-- Liens de navigation au centre -->
         <li class="nav-item">
-          <a class="nav-link" [routerLink]="['/coran']">Coran</a>
+          <a class="nav-link text-white" [routerLink]="['/coran']">Coran</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" [routerLink]="['/hadith']">Hadith</a>
+          <a class="nav-link text-white" [routerLink]="['/hadith']">Hadith</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" [routerLink]="['/invocations']">Invocations</a>
+          <a class="nav-link text-white" [routerLink]="['/invocations']">Invocations</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" [routerLink]="['/attributes']">Noms d'Allah</a>
+          <a class="nav-link text-white" [routerLink]="['/attributes']">Noms d'Allah</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" [routerLink]="['/histoire']">Histoire du monde musulman</a>
+          <a class="nav-link text-white" [routerLink]="['/histoire']">Histoire du monde musulman</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" [routerLink]="['/prophets']">Histoire des prophètes</a>
+          <a class="nav-link text-white" [routerLink]="['/prophets']">Histoire des prophètes</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" [routerLink]="['/cours-arabe']">Cours d'Arabe</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link text-primary" [routerLink]="['/login']">Se connecter</a>
+          <a class="nav-link text-white" [routerLink]="['/cours-arabe']">Cours d'Arabe</a>
         </li>
 
+      </ul>
+
+      <!-- Lien Se connecter aligné à droite -->
+      <ul class="navbar-nav">
+        <li class="nav-item">
+          <a class="nav-link text-white fw-bold" [routerLink]="['/login']">Se connecter</a>
+        </li>
       </ul>
     </div>
   </div>
 </nav>
+
+<!-- Styles personnalisés -->
+<style>
+  .navbar {
+    transition: background-color 0.3s ease;
+  }
+
+  .navbar:hover {
+    background-color: #333;
+  }
+
+  .nav-link {
+    font-size: 1.1rem;
+    padding: 12px 18px;
+    transition: background-color 0.3s ease;
+  }
+
+  .nav-link:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+    border-radius: 4px;
+  }
+
+  .navbar-toggler-icon {
+    background-color: white;
+  }
+
+  .navbar-brand i {
+    color: #fff;
+  }
+
+  /* Aligner le texte à droite pour "Se connecter" */
+  .navbar-nav:last-child {
+    margin-left: auto;
+  }
+
+  .nav-link.text-white {
+    color: white !important;
+  }
+
+  .nav-item .nav-link.text-white:hover {
+    color: #f8f9fa;
+    background-color: rgba(0, 0, 0, 0.2);
+  }
+
+  /* Style pour centrer les éléments dans la barre de navigation */
+  .navbar-nav.mx-auto {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+</style>
