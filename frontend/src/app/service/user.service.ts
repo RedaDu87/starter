@@ -8,8 +8,8 @@ import { Key } from '../enum/key.enum';
 
 @Injectable()
 export class UserService {
-  private readonly server: string = 'http://vps-27d6c134.vps.ovh.net:8080';
-  //private readonly server: string = 'http://localhost:8080';
+  //private readonly server: string = 'http://vps-27d6c134.vps.ovh.net:8080';
+  private readonly server: string = 'http://localhost:8080';
   private jwtHelper = new JwtHelperService();
 
   constructor(private http: HttpClient) { }
