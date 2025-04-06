@@ -37,7 +37,7 @@ public class Application {
 		CorsConfiguration corsConfiguration = new CorsConfiguration();
 		corsConfiguration.setAllowCredentials(true);
 		//corsConfiguration.setAllowedOriginPatterns(List.of("*"));
-		corsConfiguration.setAllowedOrigins(List.of("http://vps-27d6c134.vps.ovh.net:4200", "http://vps-27d6c134.vps.ovh.net:8080", "http://vps-27d6c134.vps.ovh.net:3000", "http://coran-hadith.fr"));
+		//corsConfiguration.setAllowedOrigins(List.of("http://vps-27d6c134.vps.ovh.net:4200", "http://vps-27d6c134.vps.ovh.net:8080", "http://vps-27d6c134.vps.ovh.net:3000", "http://coran-hadith.fr"));
 		corsConfiguration.setAllowedOrigins(Arrays.asList("*"));
 		corsConfiguration.setAllowedHeaders(Arrays.asList("Origin", "Access-Control-Allow-Origin", "Content-Type",
 				"Accept", "Jwt-Token", "Authorization", "Origin", "Accept", "X-Requested-With",
