@@ -1,0 +1,32 @@
+# Node modules (déjà rebuildés dans le Dockerfile)
+node_modules
+
+# Fichiers de log
+npm-debug.log
+yarn-debug.log
+yarn-error.log
+
+# Environnement local
+.env
+.env.local
+.vscode
+.idea
+
+# Systèmes d'exploitation
+.DS_Store
+Thumbs.db
+
+# Git
+.git
+.gitignore
+
+# Cache & build locaux
+dist
+tmp
+out-tsc
+
+# Fichiers inutiles
+proxy.conf.json
+angular.json.backup
+*.swp
+*.swo
