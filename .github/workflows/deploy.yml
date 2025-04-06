@@ -86,7 +86,7 @@ jobs:
 
             git pull origin main
 
-            docker-compose down
-            docker-compose pull
-            docker-compose up -d --remove-orphans
+            docker compose down
+            docker compose pull
+            docker compose up -d --remove-orphans
           EOF
