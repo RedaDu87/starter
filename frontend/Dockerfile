@@ -3,7 +3,8 @@ FROM node:20-alpine AS build
 WORKDIR /app
 COPY . .
 RUN npm install
-RUN npm run build --prod
+RUN npx ng build securecapitaapp --configuration=production
+
 
 # Étape 2 : serveur NGINX pour servir l'app Angular
 FROM nginx:alpine

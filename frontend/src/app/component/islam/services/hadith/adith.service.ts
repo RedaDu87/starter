@@ -1,11 +1,15 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
+import {environment} from "../../../../../environments/environment";
 
 @Injectable({
   providedIn: 'root'
 })
 export class AdithService {
+  private readonly server: string = environment.apiUrl;
+
+
 
   urlCategorie : string = "/api-hadith/api/v1/categories/list/?language=fr";
   urlListCategorie : string ="/api-hadith/api/v1/hadeeths/list/?language=fr&category_id=32";
