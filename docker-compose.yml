@@ -1,5 +1,3 @@
-version: '3.8'
-
 services:
 
   mariadb:
@@ -18,16 +16,16 @@ services:
       SPRING_DATASOURCE_URL: jdbc:mariadb://mariadb:3306/securecapita
       SPRING_DATASOURCE_USERNAME: root
       SPRING_DATASOURCE_PASSWORD: root
-    expose:
-      - "8080"  # Permet à Traefik de voir le port
+    ports:
+      - "8080:8080"  # Expose le backend à l'extérieur (utile pour tests direct)
     networks:
       - securecapita_net
       - traefik_net
 
   frontend:
     image: anikondu87/securecapita-frontend:latest
-    expose:
-      - "80"
+    ports:
+      - "80:80"  # Expose le frontend sur le port HTTP standard
     networks:
       - securecapita_net
       - traefik_net
