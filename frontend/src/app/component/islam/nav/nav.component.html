@@ -1,170 +1,45 @@
-<header>
-  <nav class="navbar">
-    <div class="logo">
-      <a href="">Monothéisme primordial</a>
-    </div>
-    <button class="menu-toggle" (click)="toggleMenu()" aria-label="Toggle menu">
-      <span class="bar"></span>
-      <span class="bar"></span>
-      <span class="bar"></span>
+<!-- Navigation-->
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+  <div class="container-fluid">
+    <a class="navbar-brand" [routerLink]="['/']">
+      <i class="bi bi-safe me-2"></i>
+      SecureCapita
+    </a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+            data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
+            aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
     </button>
-    <ul class="mega-menu" [class.active]="isMenuOpen">
-      <li class="menu-item">
-        <a href="/coran">Coran</a>
-      </li>
-      <li class="menu-item">
-        <a href="/hadith">Hadith</a>
-      </li>
-      <li class="menu-item">
-        <a href="/invocations">Invocations</a>
-      </li>
-      <!-- <li class="menu-item">
-        <a href="#">Exégèse</a>
-        <div class="submenu">
-          <ul>
-            <li><a href="#">Débutant</a></li>
-            <li><a href="#">Intermédiaire</a></li>
-            <li><a href="#">Avancé</a></li>
-          </ul>
-        </div>
-      </li> -->
-      <li class="menu-item">
-        <a href="/attributes">Noms d'Allah</a>
-       </li>
-      <li class="menu-item">
-        <a href="/histoire">Histoire du monde musulman</a>
-      </li>
-      <li class="menu-item">
-        <a href="/prophets">Histoire des prophètes</a>
-      </li>
-      <!-- <li class="menu-item">
-        <a href="#">Les 5 piliers de l'islam</a>
-        <div class="submenu">
-          <ul>
-            <li><a href="#">Débutant</a></li>
-            <li><a href="#">Intermédiaire</a></li>
-            <li><a href="#">Avancé</a></li>
-          </ul>
-        </div>
-      </li> -->
-      <!-- <li class="menu-item">
-        <a href="#">Pilier de la foi</a>
-        <div class="submenu">
-          <ul>
-            <li><a href="#">Débutant</a></li>
-            <li><a href="#">Intermédiaire</a></li>
-            <li><a href="#">Avancé</a></li>
-          </ul>
-        </div>
-      </li> -->
-      <!-- <li class="menu-item">
-        <a href="#">La vie du prophète Mohamed (pbsl)</a>
-        <div class="submenu">
-          <ul>
-            <li><a href="#">Débutant</a></li>
-            <li><a href="#">Intermédiaire</a></li>
-            <li><a href="#">Avancé</a></li>
-          </ul>
-        </div>
-      </li> -->
-      <!-- <li class="menu-item">
-        <a href="#">Les 4 qualifes biens guidés</a>
-        <div class="submenu">
-          <ul>
-            <li><a href="#">Débutant</a></li>
-            <li><a href="#">Intermédiaire</a></li>
-            <li><a href="#">Avancé</a></li>
-          </ul>
-        </div>
-      </li> -->
-      <!-- <li class="menu-item">
-        <a href="#">Des hommes autour du prophète (pbsl)</a>
-        <div class="submenu">
-          <ul>
-            <li><a href="#">Débutant</a></li>
-            <li><a href="#">Intermédiaire</a></li>
-            <li><a href="#">Avancé</a></li>
-          </ul>
-        </div>
-      </li> -->
-      <!-- <li class="menu-item">
-        <a href="#">Purification de l'âme</a>
-        <div class="submenu">
-          <ul>
-            <li><a href="#">Débutant</a></li>
-            <li><a href="#">Intermédiaire</a></li>
-            <li><a href="#">Avancé</a></li>
-          </ul>
-        </div>
-      </li> -->
-      <!-- <li class="menu-item">
-        <a href="#">Méthodes de calcul des horaires de prières</a>
-        <div class="submenu">
-          <ul>
-            <li><a href="#">Débutant</a></li>
-            <li><a href="#">Intermédiaire</a></li>
-            <li><a href="#">Avancé</a></li>
-          </ul>
-        </div>
-      </li> -->
-      <!-- <li class="menu-item">
-        <a href="#">Les ruses de Sheitan le maudit</a>
-        <div class="submenu">
-          <ul>
-            <li><a href="#">Débutant</a></li>
-            <li><a href="#">Intermédiaire</a></li>
-            <li><a href="#">Avancé</a></li>
-          </ul>
-        </div>
-      </li> -->
-      <!-- <li class="menu-item">
-        <a href="#">Idées fausses à propos de l'islam</a>
-        <div class="submenu">
-          <ul>
-            <li><a href="#">Débutant</a></li>
-            <li><a href="#">Intermédiaire</a></li>
-            <li><a href="#">Avancé</a></li>
-          </ul>
-        </div>
-      </li> -->
-      <!-- <li class="menu-item">
-        <a href="#">Questions fréquentes</a>
-        <div class="submenu">
-          <ul>
-            <li><a href="#">Débutant</a></li>
-            <li><a href="#">Intermédiaire</a></li>
-            <li><a href="#">Avancé</a></li>
-          </ul>
-        </div>
-      </li> -->
-      <li class="menu-item">
-        <a href="#">Cours d'Arabe</a>
-      </li>
-      <!-- <li class="menu-item">
-        <a href="#">Annuaire des mosquées</a>
-        <div class="submenu">
-          <ul>
-            <li><a href="#">Débutant</a></li>
-            <li><a href="#">Intermédiaire</a></li>
-            <li><a href="#">Avancé</a></li>
-          </ul>
-        </div>
-      </li>
-      <li class="menu-item">
-        <a href="#">Quizz</a>
-        <div class="submenu">
-          <ul>
-            <li><a href="#">Débutant</a></li>
-            <li><a href="#">Intermédiaire</a></li>
-            <li><a href="#">Avancé</a></li>
-          </ul>
-        </div>
-      </li> -->
-      <li class="menu-item">
-        <a class="alert-primary" routerLink="/login">Se connecter</a>
-      </li>
-    </ul>
-  </nav>
-</header>
 
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
 
+        <li class="nav-item">
+          <a class="nav-link" [routerLink]="['/coran']">Coran</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" [routerLink]="['/hadith']">Hadith</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" [routerLink]="['/invocations']">Invocations</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" [routerLink]="['/attributes']">Noms d'Allah</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" [routerLink]="['/histoire']">Histoire du monde musulman</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" [routerLink]="['/prophets']">Histoire des prophètes</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" [routerLink]="['/cours-arabe']">Cours d'Arabe</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link text-primary" [routerLink]="['/login']">Se connecter</a>
+        </li>
+
+      </ul>
+    </div>
+  </div>
+</nav>

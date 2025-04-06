@@ -1,10 +1,14 @@
-services:
+version: '3.8'
 
+services:
   mariadb:
     image: mariadb:11
+    restart: unless-stopped
     environment:
       MYSQL_ROOT_PASSWORD: root
       MYSQL_DATABASE: securecapita
+    ports:
+      - "3307:3306"
     volumes:
       - mariadb_data:/var/lib/mysql
     networks:
@@ -12,27 +16,30 @@ services:
 
   backend:
     image: anikondu87/securecapita-backend:latest
+    restart: unless-stopped
+    depends_on:
+      - mariadb
+    ports:
+      - "8080:8080"
     environment:
       SPRING_DATASOURCE_URL: jdbc:mariadb://mariadb:3306/securecapita
       SPRING_DATASOURCE_USERNAME: root
       SPRING_DATASOURCE_PASSWORD: root
-    ports:
-      - "8080:8080"  # Expose le backend à l'extérieur (utile pour tests direct)
     networks:
       - securecapita_net
-      - traefik_net
 
   frontend:
     image: anikondu87/securecapita-frontend:latest
     ports:
-      - "80:80"  # Expose le frontend sur le port HTTP standard
+      - "80:80"
+    depends_on:
+      - backend
     networks:
       - securecapita_net
-      - traefik_net
 
 volumes:
   mariadb_data:
 
 networks:
   securecapita_net:
-  traefik_net:
+    driver: overlay
