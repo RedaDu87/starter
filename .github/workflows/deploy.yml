@@ -41,15 +41,15 @@ jobs:
         with:
           node-version: '18'
 
-      - name: Give execute permission to mvnw
-        working-directory: ./backend
-        run: chmod +x mvnw
-
       - name: Build Angular frontend
         working-directory: ./frontend
         run: |
           npm install
           npm run build 
+
+      - name: Build Spring Boot backend with Maven
+        working-directory: ./backend
+        run: mvn clean package -DskipTests
 
       - name: Build Docker images
         run: |
@@ -82,13 +82,10 @@ jobs:
           sshpass -e ssh -o StrictHostKeyChecking=no ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} << EOF
             docker login -u "${{ secrets.DOCKER_USERNAME }}" -p "${{ secrets.DOCKER_PASSWORD }}"
 
-            # Aller dans le dossier du projet
             cd /home/${{ secrets.SSH_USER }}/securecapita
 
-            # Pull les dernières sources (optionnel si déjà cloné via GitHub)
             git pull origin main
 
-            # Recréer les conteneurs avec les nouvelles images
             docker-compose down
             docker-compose pull
             docker-compose up -d --remove-orphans
