@@ -37,6 +37,4 @@ volumes:
 
 networks:
   securecapita_net:
-    external: true
   traefik_net:
-    external: true
