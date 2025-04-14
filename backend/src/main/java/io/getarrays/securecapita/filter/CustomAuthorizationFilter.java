@@ -37,6 +37,7 @@ import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 @Slf4j
 public class CustomAuthorizationFilter extends OncePerRequestFilter {
     private final TokenProvider tokenProvider;
+    private final AntPathMatcher pathMatcher = new AntPathMatcher();
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filter) throws ServletException, IOException {
@@ -60,9 +61,17 @@ public class CustomAuthorizationFilter extends OncePerRequestFilter {
 
     @Override
     protected boolean shouldNotFilter(HttpServletRequest request) throws ServletException {
-        return request.getHeader(AUTHORIZATION) == null || !request.getHeader(AUTHORIZATION).startsWith(TOKEN_PREFIX) ||
-                request.getMethod().equalsIgnoreCase(HTTP_OPTIONS_METHOD) || asList(PUBLIC_ROUTES).contains(request.getRequestURI());
+        String path = request.getRequestURI();
+        return request.getMethod().equalsIgnoreCase(HTTP_OPTIONS_METHOD) ||
+                request.getHeader(AUTHORIZATION) == null ||
+                !request.getHeader(AUTHORIZATION).startsWith(TOKEN_PREFIX) ||
+                isPublicRoute(path);
     }
+
+    private boolean isPublicRoute(String path) {
+        return Arrays.stream(PUBLIC_ROUTES).anyMatch(publicRoute -> pathMatcher.match(publicRoute, path));
+    }
+
 
     private Long getUserId(HttpServletRequest request) {
         return tokenProvider.getSubject(getToken(request), request);

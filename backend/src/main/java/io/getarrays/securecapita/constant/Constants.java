@@ -13,18 +13,16 @@ public class Constants {
             "/user/refresh/token/**", "/user/image/**", "/user/new/password/**" ,"/api/quran/**", "/api/hadith/**"};
     public static final String TOKEN_PREFIX = "Bearer ";
     public static final String[] PUBLIC_ROUTES = {
-            "/user/new/password", "/user/login",
+            "/user/new/password",
+            "/user/login",
             "/user/verify/code",
             "/user/register",
             "/user/refresh/token",
             "/user/image",
             "/api/user/login",
             "/api/user/register",
-            "/api/hadith/categories",
-            "/api/hadith/list",
-            "/api/hadith/detail",
-            "/api/quran/surah",
-            "/api/quran/verses"
+            "/api/hadith/**",
+            "/api/quran/**"
     };
     public static final String HTTP_OPTIONS_METHOD = "OPTIONS";
     public static final String AUTHORITIES = "authorities";
