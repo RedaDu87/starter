@@ -1,78 +1,82 @@
-<div class="container py-4">
-  <!-- Barre de sélection de la sourate -->
-  <div class="mb-4">
-    <div class="d-flex align-items-center mb-3">
-      <label for="sourahSelect" class="form-label me-2">Sélectionner une Sourate:</label>
-      <div class="flex-grow-1">
-        <select id="sourahSelect" class="form-select" [(ngModel)]="myDropDown" (ngModelChange)="onChangeofOptions($event)">
-          <option *ngFor="let sourah of listeSourah.data" value="{{sourah.number}}">
-            {{sourah.name}} - {{sourah.number}} - {{sourah.englishName}}
-          </option>
-        </select>
-      </div>
+<div class="container-fluid min-vh-100 py-5 bg-light">
+  <!-- Sélection de la sourate -->
+  <div class="text-center mb-5">
+    <h2 class="text-success fw-bold mb-4">📖 Sélectionner une Sourate</h2>
+    <div class="mx-auto" style="max-width: 600px;">
+      <select id="sourahSelect" class="form-select form-select-lg shadow border-success fw-semibold text-center"
+              [(ngModel)]="myDropDown"
+              (ngModelChange)="onChangeofOptions($event)">
+        <option *ngFor="let sourah of listeSourah.data" [value]="sourah.number">
+          {{ sourah.name }} - {{ sourah.number }} - {{ sourah.englishName }}
+        </option>
+      </select>
     </div>
+  </div>
 
-    <div class="d-flex justify-content-start mb-3">
-      <button class="btn btn-primary me-2" (click)="playayaAr()">
-        <i class="fas fa-play"></i> Arabe
-      </button>
-      <button class="btn btn-secondary me-2" (click)="playayaFr()">
-        <i class="fas fa-play"></i> Français
-      </button>
-      <button class="btn btn-warning me-2" (click)="pauseaya()">
-        <i class="fas fa-pause"></i>
-      </button>
-      <button class="btn btn-success me-2" (click)="reprendreaya()">
-        <i class="fas fa-redo"></i> Reprendre
-      </button>
+  <!-- Contrôles audio -->
+  <div class="d-flex flex-wrap justify-content-center gap-3 mb-4">
+    <button class="btn btn-success px-4" (click)="playayaAr()">
+      ▶️ Arabe
+    </button>
+    <button class="btn btn-secondary px-4" (click)="playayaFr()">
+      ▶️ Français
+    </button>
+    <button class="btn btn-warning px-4" (click)="pauseaya()">
+      ⏸️ Pause
+    </button>
+    <button class="btn btn-outline-success px-4" (click)="reprendreaya()">
+      🔄 Reprendre
+    </button>
+  </div>
+
+  <!-- Options d'affichage -->
+  <div class="d-flex justify-content-center gap-4 mb-5">
+    <div class="form-check">
+      <input class="form-check-input" type="checkbox" id="arab" [(ngModel)]="isArabChecked">
+      <label class="form-check-label fw-semibold" for="arab">Arabe</label>
     </div>
-
-    <div class="d-flex justify-content-start mb-3">
-      <div class="form-check me-3">
-        <input class="form-check-input" type="checkbox" id="arab" [(ngModel)]="isArabChecked">
-        <label class="form-check-label" for="arab">Arabe</label>
-      </div>
-      <div class="form-check me-3">
-        <input class="form-check-input" type="checkbox" id="fr" [(ngModel)]="isFrChecked">
-        <label class="form-check-label" for="fr">Français</label>
-      </div>
-      <div class="form-check">
-        <input class="form-check-input" type="checkbox" id="translit" [(ngModel)]="isTransChecked">
-        <label class="form-check-label" for="translit">Translitération</label>
-      </div>
+    <div class="form-check">
+      <input class="form-check-input" type="checkbox" id="fr" [(ngModel)]="isFrChecked">
+      <label class="form-check-label fw-semibold" for="fr">Français</label>
+    </div>
+    <div class="form-check">
+      <input class="form-check-input" type="checkbox" id="translit" [(ngModel)]="isTransChecked">
+      <label class="form-check-label fw-semibold" for="translit">Translitération</label>
     </div>
   </div>
 
   <!-- Liste des versets -->
-  <div class="list-group">
-    <div class="list-group-item" *ngFor="let aya of sourah.ayas; index as i" id="{{i+1}}" #ayaElement>
-      <div class="d-flex justify-content-between">
-        <p class="mb-2">Verset {{i+1}} / {{sourah.ayas.length}}</p>
-      </div>
+  <div class="list-group mx-auto" style="max-width: 900px;" *ngIf="sourah">
+    <div class="list-group-item bg-white shadow-sm rounded mb-4 px-4 py-3" *ngFor="let aya of sourah.ayas; index as i" id="{{i+1}}" #ayaElement>
+      <p class="mb-2 text-muted text-end">Verset {{ i + 1 }} / {{ sourah.ayas.length }}</p>
 
-      <!-- Affichage en arabe -->
-      <div *ngIf="isArabChecked" [ngClass]="{'bg-light': i === currentIndex}" class="d-flex justify-content-between align-items-center mb-3">
-        <p class="flex-grow-1">{{aya.ayaAr}}</p>
-        <button class="btn btn-outline-primary btn-sm" (click)="playanayaAr(i)">
-          <i class="fas fa-redo"></i>
+      <!-- Arabe -->
+      <div *ngIf="isArabChecked"
+           [ngStyle]="i === currentIndex ? {'background-color': '#d4edda', 'padding': '1rem', 'border-radius': '0.5rem'} : {}"
+           class="d-flex justify-content-between align-items-center mb-3">
+        <p class="flex-grow-1 text-end" dir="rtl" lang="ar" style="font-size: 1.4rem;">{{ aya.ayaAr }}</p>
+        <button class="btn btn-outline-success btn-sm ms-3" (click)="playanayaAr(i)">
+          🔁
         </button>
       </div>
 
-      <!-- Affichage de la translitération -->
+      <!-- Translittération -->
       <div *ngIf="isTransChecked" class="d-flex justify-content-between align-items-center mb-3">
-        <p class="flex-grow-1">{{aya.ayatr}}</p>
-        <button class="btn btn-outline-primary btn-sm" (click)="playanayaAr(i)">
-          <i class="fas fa-redo"></i>
+        <p class="flex-grow-1 fst-italic">{{ aya.ayatr }}</p>
+        <button class="btn btn-outline-success btn-sm ms-3" (click)="playanayaAr(i)">
+          🔁
         </button>
       </div>
 
-      <!-- Affichage en français -->
-      <div *ngIf="isFrChecked" [ngClass]="{'bg-light': i === currentIndex}" class="d-flex justify-content-between align-items-center mb-3">
-        <p class="flex-grow-1">{{aya.ayaFr}}</p>
-        <button class="btn btn-outline-primary btn-sm" (click)="playanayaFr(i)">
-          <i class="fas fa-redo"></i>
+      <!-- Français -->
+      <div *ngIf="isFrChecked"
+           [ngStyle]="i === currentIndex ? {'background-color': '#d4edda', 'padding': '1rem', 'border-radius': '0.5rem'} : {}"
+           class="d-flex justify-content-between align-items-center">
+        <p class="flex-grow-1">{{ aya.ayaFr }}</p>
+        <button class="btn btn-outline-success btn-sm ms-3" (click)="playanayaFr(i)">
+          🔁
         </button>
       </div>
-    </div>
   </div>
+</div>
 </div>

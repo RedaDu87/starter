@@ -11,6 +11,7 @@ import { InvoiceModule } from './component/invoice/invoice.module';
 import { NotificationModule } from './notification.module';
 import {IslamModule} from "./component/islam/islam.module";
 import {PublicHomeModule} from "./component/public-home/public-home.module";
+import {Feature1Module} from "./component/feature1/feature1.module";
 
 
 
@@ -24,7 +25,8 @@ import {PublicHomeModule} from "./component/public-home/public-home.module";
     InvoiceModule,
     HomeModule,
     AppRoutingModule,
-    NotificationModule,IslamModule,PublicHomeModule
+    NotificationModule,IslamModule,PublicHomeModule,
+    Feature1Module
   ],
   bootstrap: [AppComponent]
 })
