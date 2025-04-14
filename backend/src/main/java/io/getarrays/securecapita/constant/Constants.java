@@ -18,8 +18,13 @@ public class Constants {
             "/user/register",
             "/user/refresh/token",
             "/user/image",
-            "/api/quran/**",
-            "/api/hadith/**"
+            "/api/user/login",
+            "/api/user/register",
+            "/api/hadith/categories",
+            "/api/hadith/list",
+            "/api/hadith/detail",
+            "/api/quran/surah",
+            "/api/quran/verses"
     };
     public static final String HTTP_OPTIONS_METHOD = "OPTIONS";
     public static final String AUTHORITIES = "authorities";
