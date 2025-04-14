@@ -1,16 +1,29 @@
-<div class="container">
-  <div class="dropdown">
-    <select [(ngModel)]="selectedCategory" (change)="onCategoryChange()">
-      <option *ngFor="let category of categories" [value]="category.title">{{ category.title }}</option>
+<div class="container-fluid min-vh-100 d-flex flex-column justify-content-center align-items-center bg-light py-5">
+  <!-- Titre avec select -->
+  <div class="text-center mb-5 w-100" style="max-width: 500px;">
+    <label class="form-label fs-3 fw-bold text-success">Choisissez une catégorie</label>
+    <select class="form-select form-select-lg text-center shadow border-success fw-semibold"
+            [(ngModel)]="selectedCategory"
+            (change)="onCategoryChange()">
+      <option *ngFor="let category of categories" [value]="category.title">
+        {{ category.title }}
+      </option>
     </select>
   </div>
-  
-  <div *ngIf="selectedCategory" class="invocations-container">
-    <div *ngFor="let invocation of getInvocations(selectedCategory)" class="invocation">
-      <div class="invocation-arabe">{{ invocation.invocation_arabe }}</div>
-      <div class="invocation-transliteration">{{ invocation.invocation_transliteration }}</div>
-      <div class="invocation-francais">{{ invocation.invocation_francais }}</div>
-      <div class="invocation-raison">{{ invocation.raison }}</div>
+
+  <!-- Liste des invocations -->
+  <div *ngIf="selectedCategory" class="w-100 d-flex flex-column align-items-center gap-4 px-3" style="max-width: 800px;">
+    <div *ngFor="let invocation of getInvocations(selectedCategory)"
+         class="card shadow border-0 rounded-4 text-dark w-100"
+         style="background: linear-gradient(135deg, #e6ffed, #ccf2d4);">
+
+      <div class="card-body">
+        <p class="text-end fs-4" dir="rtl" lang="ar">{{ invocation.invocation_arabe }}</p>
+        <p class="text-muted fst-italic">{{ invocation.invocation_transliteration }}</p>
+        <p class="fw-bold">{{ invocation.invocation_francais }}</p>
+        <hr>
+        <p class="mb-0"><strong>Raison :</strong> {{ invocation.raison }}</p>
+      </div>
     </div>
   </div>
 </div>

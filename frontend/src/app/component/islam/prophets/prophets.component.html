@@ -1,11 +1,24 @@
-<div class="container">
-    <div class="prophets-container">
-      <div *ngFor="let prophet of prophets" class="prophet-card">
-        <div class="prophet-name">{{ prophet.nom }}</div>
-        <div class="prophet-name-arabe">{{ prophet.nom_arabe }}</div>
-        <div class="prophet-role">{{ prophet.role }}</div>
-        <div class="prophet-history">{{ prophet.histoire }}</div>
+<div class="container-fluid py-5 bg-light d-flex flex-column align-items-center">
+  <h2 class="text-success fw-bold mb-4">🌟 Les Prophètes de l'Islam</h2>
+
+  <div class="w-100 d-flex flex-column align-items-center gap-4 px-3" style="max-width: 900px;">
+    <div *ngFor="let prophet of prophets"
+         class="card shadow-sm border-0 w-100 rounded-4"
+         style="background: linear-gradient(135deg, #e6ffed, #ccf2d4);">
+
+      <div class="card-body">
+        <!-- Nom -->
+        <div class="d-flex justify-content-between align-items-center mb-2">
+          <h4 class="text-success fw-bold mb-0">{{ prophet.nom }}</h4>
+          <h5 class="text-end mb-0" dir="rtl" lang="ar">{{ prophet.nom_arabe }}</h5>
+        </div>
+
+        <!-- Rôle -->
+        <p class="fst-italic text-muted mb-2"><strong>Rôle :</strong> {{ prophet.role }}</p>
+
+        <!-- Histoire -->
+        <p class="mb-0 text-dark">{{ prophet.histoire }}</p>
       </div>
     </div>
   </div>
-  
+</div>

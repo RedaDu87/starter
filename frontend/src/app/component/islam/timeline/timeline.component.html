@@ -1,16 +1,29 @@
-<div class="timeline-container">
-    <div class="timeline">
-      <ng-container *ngFor="let period of periods">
-        <h2>{{ period.titre_periode }}</h2>
-        <div *ngFor="let event of period.evenements" class="timeline-item">
-          <div class="timeline-content">
-            <h3>{{ event.titre }}</h3>
-            <p>{{ event.description }}</p>
-            <span class="timeline-date">{{ event.date }}</span>
-          </div>
-          <div class="timeline-dot"></div>
-        </div>
-      </ng-container>
-    </div>
+<div class="container-fluid py-5 bg-light">
+  <div class="text-center mb-5">
+    <h2 class="text-success fw-bold">🕰️ Chronologie des Événements</h2>
   </div>
-  
+
+  <div class="mx-auto" style="max-width: 800px;">
+    <ng-container *ngFor="let period of periods">
+      <h3 class="text-success border-bottom pb-2 mb-4">{{ period.titre_periode }}</h3>
+
+      <div class="position-relative ps-4 mb-5">
+        <!-- Ligne verticale -->
+        <div class="position-absolute top-0 start-0 bg-success" style="width: 4px; height: 100%; left: 10px;"></div>
+
+        <div *ngFor="let event of period.evenements" class="mb-5 position-relative">
+          <!-- Point -->
+          <div class="position-absolute top-0 start-0 translate-middle rounded-circle bg-success"
+               style="width: 20px; height: 20px; left: 2px;"></div>
+
+          <!-- Contenu -->
+          <div class="ms-5 p-4 bg-white shadow rounded">
+            <h5 class="fw-bold text-success">{{ event.titre }}</h5>
+            <p class="mb-1">{{ event.description }}</p>
+            <small class="text-muted fst-italic">{{ event.date }}</small>
+          </div>
+        </div>
+      </div>
+    </ng-container>
+  </div>
+</div>
