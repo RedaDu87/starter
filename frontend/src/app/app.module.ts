@@ -25,8 +25,8 @@ import {Feature1Module} from "./component/feature1/feature1.module";
     InvoiceModule,
     HomeModule,
     AppRoutingModule,
-    NotificationModule,IslamModule,PublicHomeModule,
-    Feature1Module
+    NotificationModule,
+    PublicHomeModule
   ],
   bootstrap: [AppComponent]
 })

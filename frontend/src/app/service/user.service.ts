@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
-import { catchError, Observable, tap, throwError } from 'rxjs';
+import {BehaviorSubject, catchError, Observable, tap, throwError} from 'rxjs';
 import { JwtHelperService } from '@auth0/angular-jwt';
 import { AccountType, CustomHttpResponse, Profile } from '../interface/appstates';
 import { User } from '../interface/user';
@@ -14,6 +14,10 @@ export class UserService {
   private jwtHelper = new JwtHelperService();
 
   constructor(private http: HttpClient) { }
+
+  private currentUserSubject = new BehaviorSubject<User>(null);
+  public currentUser$ = this.currentUserSubject.asObservable();
+
 
   login$ = (email: string, password: string) => <Observable<CustomHttpResponse<Profile>>>
     this.http.post<CustomHttpResponse<Profile>>
@@ -64,12 +68,15 @@ export class UserService {
       );
 
   profile$ = () => <Observable<CustomHttpResponse<Profile>>>
-    this.http.get<CustomHttpResponse<Profile>>
-      (`${this.server}/user/profile`)
+    this.http.get<CustomHttpResponse<Profile>>(`${this.server}/user/profile`)
       .pipe(
-        tap(console.log),
+        tap(response => {
+          console.log('Profile Loaded:', response);
+          this.currentUserSubject.next(response.data.user); // ← ici tu extrais le user
+        }),
         catchError(this.handleError)
       );
+
 
   update$ = (user: User) => <Observable<CustomHttpResponse<Profile>>>
     this.http.patch<CustomHttpResponse<Profile>>
@@ -137,6 +144,7 @@ export class UserService {
   logOut() {
     localStorage.removeItem(Key.TOKEN);
     localStorage.removeItem(Key.REFRESH_TOKEN);
+
   }
 
   isAuthenticated = (): boolean => (this.jwtHelper.decodeToken<string>(localStorage.getItem(Key.TOKEN)) && !this.jwtHelper.isTokenExpired(localStorage.getItem(Key.TOKEN))) ? true : false;

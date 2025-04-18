@@ -5,7 +5,7 @@ import {Feature1Component} from "./feature1/feature1.component";
 
 
 const feature1Routes: Routes = [
-  { path: 'feature', component: Feature1Component, canActivate: [AuthenticationGuard] }
+  { path: '', component: Feature1Component, canActivate: [AuthenticationGuard] }
 ];
 
 @NgModule({

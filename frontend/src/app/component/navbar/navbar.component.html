@@ -9,6 +9,27 @@
           data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false"
           aria-label="Toggle navigation"><span class="navbar-toggler-icon"></span></button>
        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+         <ul class="navbar-nav mx-auto mb-2 mb-lg-0">
+         <!-- Liens de navigation au centre -->
+         <li class="nav-item">
+           <a class="nav-link text-white" [routerLink]="['/coran']">Coran</a>
+         </li>
+         <li class="nav-item">
+           <a class="nav-link text-white" [routerLink]="['/hadith']">Hadith</a>
+         </li>
+         <li class="nav-item">
+           <a class="nav-link text-white" [routerLink]="['/invocations']">Invocations</a>
+         </li>
+         <li class="nav-item">
+           <a class="nav-link text-white" [routerLink]="['/attributes']">Noms d'Allah</a>
+         </li>
+         <li class="nav-item">
+           <a class="nav-link text-white" [routerLink]="['/histoire']">Histoire du monde musulman</a>
+         </li>
+         <li class="nav-item">
+           <a class="nav-link text-white" [routerLink]="['/prophets']">Histoire des prophètes</a>
+         </li>
+         </ul>
           <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
              <li class="nav-item dropdown">
                 <a class="nav-link dropdown-toggle" id="navbarDropdownBlog" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
