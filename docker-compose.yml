@@ -1,29 +1,6 @@
 version: '3.8'
 
 services:
-
-  traefik:
-    image: traefik:v2.10
-    command:
-      - "--api.insecure=true"
-      - "--providers.docker"
-      - "--api.dashboard=true"
-      - "--entrypoints.web.address=:80"
-      - "--entrypoints.websecure.address=:443"
-      - "--entrypoints.traefik.address=:8080"
-      - "--certificatesresolvers.myresolver.acme.httpchallenge.entrypoint=web"
-      - "--certificatesresolvers.myresolver.acme.email=reda.berkouch@live.fr"
-      - "--certificatesresolvers.myresolver.acme.storage=/letsencrypt/acme.json"
-    ports:
-      - "80:80"
-      - "443:443"
-    volumes:
-      - /var/run/docker.sock:/var/run/docker.sock:ro
-      - traefik_letsencrypt:/letsencrypt
-    networks:
-      - traefik
-
-
   mariadb:
     image: mariadb:11
     restart: unless-stopped
@@ -42,51 +19,27 @@ services:
     restart: unless-stopped
     depends_on:
       - mariadb
+    ports:
+      - "8080:8080"
     environment:
       SPRING_DATASOURCE_URL: jdbc:mariadb://mariadb:3306/securecapita
       SPRING_DATASOURCE_USERNAME: root
       SPRING_DATASOURCE_PASSWORD: root
     networks:
       - securecapita_net
-      - traefik
-    labels:
-      - "traefik.enable=true"
-      - "traefik.http.services.backend.loadbalancer.server.port=8080"
-      - "traefik.http.routers.backend.rule=Host(`api.coran-hadith.fr`)"
-      - "traefik.http.routers.backend.entrypoints=websecure"
-      - "traefik.http.routers.backend.tls.certresolver=myresolver"
 
   frontend:
     image: anikondu87/securecapita-frontend:latest
-    restart: unless-stopped
+    ports:
+      - "80:80"
     depends_on:
       - backend
     networks:
       - securecapita_net
-      - traefik
-    labels:
-      - "traefik.enable=true"
-
-      - "traefik.http.routers.frontend.rule=Host(`coran-hadith.fr`, `www.coran-hadith.fr`)"
-      - "traefik.http.routers.frontend.entrypoints=websecure"
-      - "traefik.http.routers.frontend.tls.certresolver=myresolver"
-      - "traefik.http.routers.frontend.middlewares=redirect-to-https,redirect-to-non-www"
-
-      - "traefik.http.routers.frontend-http.entrypoints=web"
-      - "traefik.http.routers.frontend-http.rule=Host(`coran-hadith.fr`, `www.coran-hadith.fr`)"
-      - "traefik.http.middlewares.redirect-to-https.redirectscheme.scheme=https"
-
-      - "traefik.http.middlewares.redirect-to-non-www.redirectregex.regex=^https://www\\.(.*)"
-      - "traefik.http.middlewares.redirect-to-non-www.redirectregex.replacement=https://$$1"
-
-
 
 volumes:
   mariadb_data:
-  traefik_letsencrypt:
 
 networks:
   securecapita_net:
     driver: bridge
-  traefik:
-    external: true
