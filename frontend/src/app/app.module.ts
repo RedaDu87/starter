@@ -12,11 +12,13 @@ import { NotificationModule } from './notification.module';
 import {IslamModule} from "./component/islam/islam.module";
 import {PublicHomeModule} from "./component/public-home/public-home.module";
 import {Feature1Module} from "./component/feature1/feature1.module";
+import { CalendarComponent } from './component/calendar/calendar.component';
+import {FullCalendarModule} from "@fullcalendar/angular";
 
 
 
 @NgModule({
-  declarations: [ AppComponent ],
+  declarations: [AppComponent],
   imports: [
     BrowserModule,
     CoreModule,
@@ -26,7 +28,10 @@ import {Feature1Module} from "./component/feature1/feature1.module";
     HomeModule,
     AppRoutingModule,
     NotificationModule,
-    PublicHomeModule
+    PublicHomeModule,
+  ],
+  exports: [
+
   ],
   bootstrap: [AppComponent]
 })

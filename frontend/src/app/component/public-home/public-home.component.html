@@ -1,8 +1,4 @@
 <app-nav *ngIf="user == null"></app-nav>
 <app-navbar *ngIf="user != null"  [user]="user"></app-navbar>
-
-
 <router-outlet></router-outlet>
 
-<h1>ALlo</h1>
-{{user | json}}

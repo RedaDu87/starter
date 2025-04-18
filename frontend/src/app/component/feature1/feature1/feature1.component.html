@@ -1,1 +1,7 @@
-lol
+<app-nav *ngIf="user == null"></app-nav>
+<app-navbar *ngIf="user != null"  [user]="user"></app-navbar>
+<div class="container">
+  <app-calendar></app-calendar>
+</div>
+
+
