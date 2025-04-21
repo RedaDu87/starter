@@ -20,32 +20,39 @@ import java.util.Arrays;
 
 @SpringBootApplication//(exclude = { SecurityAutoConfiguration.class })
 public class Application {
-	private static final int STRENGHT = 12;
-
-	public static void main(String[] args) {
-		SpringApplication.run(Application.class, args);
-	}
+	private static final int STRENGTH = 12;
 
 	@Bean
 	public BCryptPasswordEncoder passwordEncoder() {
-		return new BCryptPasswordEncoder(STRENGHT);
+		return new BCryptPasswordEncoder(STRENGTH);
 	}
 
 	@Bean
 	public CorsFilter corsFilter() {
-		UrlBasedCorsConfigurationSource urlBasedCorsConfigurationSource = new UrlBasedCorsConfigurationSource();
-		CorsConfiguration corsConfiguration = new CorsConfiguration();
-		corsConfiguration.setAllowCredentials(true);
-		corsConfiguration.setAllowedOriginPatterns(List.of("*"));
-		corsConfiguration.setAllowedOrigins(List.of("http://vps-27d6c134.vps.ovh.net:4200", "http://vps-27d6c134.vps.ovh.net:8080", "http://vps-27d6c134.vps.ovh.net:3000", "http://coran-hadith.fr","http://api.coran-hadith.fr"));
-		corsConfiguration.setAllowedHeaders(Arrays.asList("Origin", "Access-Control-Allow-Origin", "Content-Type",
-				"Accept", "Jwt-Token", "Authorization", "Origin", "Accept", "X-Requested-With",
-				"Access-Control-Request-Method", "Access-Control-Request-Headers"));
-		corsConfiguration.setExposedHeaders(Arrays.asList("Origin", "Content-Type", "Accept", "Jwt-Token", "Authorization",
-				"Access-Control-Allow-Origin", "Access-Control-Allow-Origin", "Access-Control-Allow-Credentials", "File-Name"));
-		corsConfiguration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"));
-		urlBasedCorsConfigurationSource.registerCorsConfiguration("/**", corsConfiguration);
-		return new CorsFilter(urlBasedCorsConfigurationSource);
+		UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+		CorsConfiguration config = new CorsConfiguration();
+
+		config.setAllowCredentials(true);
+		config.setAllowedOrigins(List.of(
+				"http://vps-27d6c134.vps.ovh.net:4200",
+				"http://vps-27d6c134.vps.ovh.net:8080",
+				"http://vps-27d6c134.vps.ovh.net:3000",
+				"http://coran-hadith.fr",
+				"http://api.coran-hadith.fr"
+		));
+		config.setAllowedHeaders(List.of(
+				"Origin", "Content-Type", "Accept", "Jwt-Token", "Authorization",
+				"X-Requested-With", "Access-Control-Request-Method", "Access-Control-Request-Headers"
+		));
+		config.setExposedHeaders(List.of(
+				"Origin", "Content-Type", "Accept", "Jwt-Token", "Authorization",
+				"Access-Control-Allow-Origin", "Access-Control-Allow-Credentials", "File-Name"
+		));
+		config.setAllowedMethods(List.of("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"));
+
+		source.registerCorsConfiguration("/**", config);
+		return new CorsFilter(source);
 	}
+
 
 }
