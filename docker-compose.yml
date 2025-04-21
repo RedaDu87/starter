@@ -9,7 +9,7 @@ services:
       - --entrypoints.web.address=:80
     ports:
       - 80:80
-      - 4321:8080 # Management UI (Traefik dashboard)
+      - 4321:8080
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
     networks:
@@ -25,8 +25,21 @@ services:
       - mariadb_data:/var/lib/mysql
     networks:
       - securecapita_net
-    # Pas besoin de l'exposer via Traefik
-    # sauf si tu veux l'accès web, ce qui est rarement utile pour la DB
+
+  phpmyadmin:
+    image: phpmyadmin:latest
+    restart: unless-stopped
+    environment:
+      PMA_HOST: mariadb
+      PMA_PORT: 3306
+      MYSQL_ROOT_PASSWORD: root
+    networks:
+      - securecapita_net
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.dbadmin.rule=Host(`admin.coran-hadith.fr`)"
+      - "traefik.http.routers.dbadmin.entrypoints=web"
+      - "traefik.http.services.dbadmin.loadbalancer.server.port=80"
 
   backend:
     image: anikondu87/securecapita-backend:latest
