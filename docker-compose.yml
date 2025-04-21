@@ -3,12 +3,17 @@ version: '3.8'
 services:
   reverse-proxy:
     image: traefik:v2.4
-    command: --api.insecure=true --providers.docker
+    command:
+      - --api.insecure=true
+      - --providers.docker
+      - --entrypoints.web.address=:80
     ports:
       - 80:80
-      - 4321:8080 #Management UI
+      - 4321:8080 # Management UI (Traefik dashboard)
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
+    networks:
+      - securecapita_net
 
   mariadb:
     image: mariadb:11
@@ -16,21 +21,18 @@ services:
     environment:
       MYSQL_ROOT_PASSWORD: root
       MYSQL_DATABASE: securecapita
-
     volumes:
       - mariadb_data:/var/lib/mysql
     networks:
       - securecapita_net
-    labels:
-      - "traefik.http.routers.db.rule=Host(`db.coran-hadith.fr`)"
-      - "traefik.http.services.db.loadbalancer.server.port=3306"
+    # Pas besoin de l'exposer via Traefik
+    # sauf si tu veux l'accès web, ce qui est rarement utile pour la DB
 
   backend:
     image: anikondu87/securecapita-backend:latest
     restart: unless-stopped
     depends_on:
       - mariadb
-
     environment:
       SPRING_DATASOURCE_URL: jdbc:mariadb://mariadb:3306/securecapita
       SPRING_DATASOURCE_USERNAME: root
@@ -38,7 +40,9 @@ services:
     networks:
       - securecapita_net
     labels:
+      - "traefik.enable=true"
       - "traefik.http.routers.api.rule=Host(`api.coran-hadith.fr`)"
+      - "traefik.http.routers.api.entrypoints=web"
       - "traefik.http.services.api.loadbalancer.server.port=8080"
 
   frontend:
@@ -48,7 +52,9 @@ services:
     networks:
       - securecapita_net
     labels:
+      - "traefik.enable=true"
       - "traefik.http.routers.ui.rule=Host(`coran-hadith.fr`)"
+      - "traefik.http.routers.ui.entrypoints=web"
       - "traefik.http.services.ui.loadbalancer.server.port=80"
 
 volumes:
