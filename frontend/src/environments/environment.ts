@@ -1,7 +1,7 @@
 // environment.ts
 export const environment = {
   production: false,
-  apiUrl: 'http://vps-27d6c134.vps.ovh.net:8080',
-  coranUrl: 'http://vps-27d6c134.vps.ovh.net:8080/api/quran',
-  hadtihUrl: 'http://vps-27d6c134.vps.ovh.net:8080/api/hadith'
+  apiUrl: 'http://api.coran-hadith.fr/',
+  coranUrl: 'http://api.coran-hadith.fr/api/quran',
+  hadtihUrl: 'http://api.coran-hadith.fr/api/hadith'
 };
