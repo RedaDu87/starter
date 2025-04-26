@@ -17,7 +17,6 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
-import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.filter.CorsFilter;
 
@@ -49,22 +48,20 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        http
-                .csrf(csrf -> csrf.disable())
-                .cors(cors -> cors.configurationSource(corsConfigurationSource()))
-                .sessionManagement(session -> session.sessionCreationPolicy(STATELESS))
-                .authorizeHttpRequests(request -> request.requestMatchers(PUBLIC_URLS).permitAll())
-                .authorizeHttpRequests(request -> request.requestMatchers(OPTIONS).permitAll())
-                .authorizeHttpRequests(request -> request.requestMatchers(DELETE, "/user/delete/**").hasAnyAuthority("DELETE:USER"))
-                .authorizeHttpRequests(request -> request.requestMatchers(DELETE, "/customer/delete/**").hasAnyAuthority("DELETE:CUSTOMER"))
-                .exceptionHandling(exception -> exception.accessDeniedHandler(customAccessDeniedHandler)
-                        .authenticationEntryPoint(customAuthenticationEntryPoint))
-                .authorizeHttpRequests(request -> request.anyRequest().authenticated())
-                .addFilterBefore(customAuthorizationFilter, UsernamePasswordAuthenticationFilter.class);
+        http.csrf(csrf -> csrf.disable()).cors(withDefaults());
+        http.sessionManagement(session -> session.sessionCreationPolicy(STATELESS));
+        http.authorizeHttpRequests(request -> request.requestMatchers(PUBLIC_URLS).permitAll());
+        http.authorizeHttpRequests(request -> request.requestMatchers(OPTIONS).permitAll());
+        http.authorizeHttpRequests(request -> request.requestMatchers(DELETE, "/user/delete/**").hasAnyAuthority("DELETE:USER"));
+        http.authorizeHttpRequests(request -> request.requestMatchers(DELETE, "/customer/delete/**").hasAnyAuthority("DELETE:CUSTOMER"));
+        http.exceptionHandling(exception -> exception.accessDeniedHandler(customAccessDeniedHandler).authenticationEntryPoint(customAuthenticationEntryPoint));
+        http.authorizeHttpRequests(request -> request.anyRequest().authenticated());
+
+        http.addFilterBefore(corsFilter(), CustomAuthorizationFilter.class); // <== AJOUTE CECI
+        http.addFilterBefore(customAuthorizationFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
     }
-
 
 
     @Bean
@@ -83,17 +80,16 @@ public class SecurityConfig {
     }
 
     @Bean
-    public CorsConfigurationSource corsConfigurationSource() {
+    public CorsFilter corsFilter() {
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         CorsConfiguration config = new CorsConfiguration();
+
         config.setAllowCredentials(true);
-        config.addAllowedOriginPattern("*");
-//        config.setAllowedOrigins(List.of(
-//                "http://vps-27d6c134.vps.ovh.net:4200",
-//                "http://vps-27d6c134.vps.ovh.net:8080",
-//                "http://vps-27d6c134.vps.ovh.net:3000",
-//                "http://coran-hadith.fr",
-//                "http://api.coran-hadith.fr"
-//        ));
+        config.setAllowedOriginPatterns(List.of(
+                "http://vps-27d6c134.vps.ovh.net:*",
+                "http://coran-hadith.fr",
+                "http://api.coran-hadith.fr"
+        ));
         config.setAllowedHeaders(List.of(
                 "Origin", "Content-Type", "Accept", "Jwt-Token", "Authorization",
                 "X-Requested-With", "Access-Control-Request-Method", "Access-Control-Request-Headers"
@@ -103,9 +99,9 @@ public class SecurityConfig {
                 "Access-Control-Allow-Origin", "Access-Control-Allow-Credentials", "File-Name"
         ));
         config.setAllowedMethods(List.of("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"));
-        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+
         source.registerCorsConfiguration("/**", config);
-        return source;
+        return new CorsFilter(source);
     }
 
 
