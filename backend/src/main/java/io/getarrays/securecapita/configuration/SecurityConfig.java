@@ -86,13 +86,14 @@ public class SecurityConfig {
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration config = new CorsConfiguration();
         config.setAllowCredentials(true);
-        config.setAllowedOrigins(List.of(
-                "http://vps-27d6c134.vps.ovh.net:4200",
-                "http://vps-27d6c134.vps.ovh.net:8080",
-                "http://vps-27d6c134.vps.ovh.net:3000",
-                "http://coran-hadith.fr",
-                "http://api.coran-hadith.fr"
-        ));
+        config.addAllowedOriginPattern("*");
+//        config.setAllowedOrigins(List.of(
+//                "http://vps-27d6c134.vps.ovh.net:4200",
+//                "http://vps-27d6c134.vps.ovh.net:8080",
+//                "http://vps-27d6c134.vps.ovh.net:3000",
+//                "http://coran-hadith.fr",
+//                "http://api.coran-hadith.fr"
+//        ));
         config.setAllowedHeaders(List.of(
                 "Origin", "Content-Type", "Accept", "Jwt-Token", "Authorization",
                 "X-Requested-With", "Access-Control-Request-Method", "Access-Control-Request-Headers"
