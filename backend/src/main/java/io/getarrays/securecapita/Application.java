@@ -22,6 +22,11 @@ import java.util.Arrays;
 public class Application {
     private static final int STRENGTH = 12;
 
+    public static void main(String[] args) {
+        SpringApplication.run(Application.class, args);
+    }
+
+
     @Bean
     public BCryptPasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder(STRENGTH);
