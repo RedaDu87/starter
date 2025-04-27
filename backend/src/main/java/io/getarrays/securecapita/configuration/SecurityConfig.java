@@ -71,6 +71,7 @@ public class SecurityConfig {
         CorsConfiguration config = new CorsConfiguration();
         config.setAllowCredentials(true);
         config.setAllowedOriginPatterns(List.of(
+                "http://localhost:4200",
                 "http://coran-hadith.fr",
                 "http://api.coran-hadith.fr"
         ));
