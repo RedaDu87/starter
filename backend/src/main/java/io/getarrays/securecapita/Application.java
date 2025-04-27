@@ -32,30 +32,4 @@ public class Application {
         return new BCryptPasswordEncoder(STRENGTH);
     }
 
-    @Bean
-    public CorsFilter corsFilter() {
-        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-        CorsConfiguration config = new CorsConfiguration();
-
-        config.setAllowCredentials(true);
-        config.setAllowedOriginPatterns(List.of(
-                "http://vps-27d6c134.vps.ovh.net:*",
-                "http://coran-hadith.fr",
-                "http://api.coran-hadith.fr"
-        ));
-        config.setAllowedHeaders(List.of(
-                "Origin", "Content-Type", "Accept", "Jwt-Token", "Authorization",
-                "X-Requested-With", "Access-Control-Request-Method", "Access-Control-Request-Headers"
-        ));
-        config.setExposedHeaders(List.of(
-                "Origin", "Content-Type", "Accept", "Jwt-Token", "Authorization",
-                "Access-Control-Allow-Origin", "Access-Control-Allow-Credentials", "File-Name"
-        ));
-        config.setAllowedMethods(List.of("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"));
-
-        source.registerCorsConfiguration("/**", config);
-        return new CorsFilter(source);
-    }
-
-
 }
