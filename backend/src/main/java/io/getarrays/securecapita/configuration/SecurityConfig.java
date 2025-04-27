@@ -19,7 +19,6 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
-import org.springframework.web.filter.CorsFilter;
 
 import java.util.List;
 
@@ -29,29 +28,22 @@ import static org.springframework.http.HttpMethod.OPTIONS;
 import static org.springframework.security.config.Customizer.withDefaults;
 import static org.springframework.security.config.http.SessionCreationPolicy.STATELESS;
 
-/**
- * @author Junior RT
- * @version 1.0
- * @license Get Arrays, LLC (https://getarrays.io)
- * @since 11/19/2022
- */
-
 @Configuration
 @EnableWebSecurity
 @EnableMethodSecurity
 @RequiredArgsConstructor
 public class SecurityConfig {
+
     private final BCryptPasswordEncoder encoder;
     private final CustomAccessDeniedHandler customAccessDeniedHandler;
     private final CustomAuthenticationEntryPoint customAuthenticationEntryPoint;
     private final UserDetailsService userDetailsService;
     private final CustomAuthorizationFilter customAuthorizationFilter;
 
-
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http.csrf(csrf -> csrf.disable());
-        http.cors(cors -> cors.configurationSource(corsConfigurationSource()));
+        http.cors(cors -> cors.configurationSource(corsConfigurationSource())); // 🔥 configure correctement CORS ici
         http.sessionManagement(session -> session.sessionCreationPolicy(STATELESS));
         http.authorizeHttpRequests(request -> request.requestMatchers(PUBLIC_URLS).permitAll());
         http.authorizeHttpRequests(request -> request.requestMatchers(OPTIONS).permitAll());
@@ -60,9 +52,18 @@ public class SecurityConfig {
         http.exceptionHandling(exception -> exception.accessDeniedHandler(customAccessDeniedHandler)
                 .authenticationEntryPoint(customAuthenticationEntryPoint));
         http.authorizeHttpRequests(request -> request.anyRequest().authenticated());
+
         http.addFilterBefore(customAuthorizationFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
+    }
+
+    @Bean
+    public AuthenticationManager authenticationManager() {
+        DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
+        authProvider.setUserDetailsService(userDetailsService);
+        authProvider.setPasswordEncoder(encoder);
+        return new ProviderManager(authProvider);
     }
 
     @Bean
@@ -73,8 +74,8 @@ public class SecurityConfig {
                 "http://coran-hadith.fr",
                 "http://api.coran-hadith.fr"
         ));
-        config.setAllowedHeaders(List.of("*"));
-        config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"));
+        config.setAllowedHeaders(List.of("*")); // 🔥 autorise tous les headers
+        config.setAllowedMethods(List.of("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS")); // 🔥 toutes méthodes
         config.setExposedHeaders(List.of(
                 "Authorization", "Jwt-Token", "Access-Control-Allow-Origin", "Access-Control-Allow-Credentials"
         ));
@@ -83,46 +84,4 @@ public class SecurityConfig {
         source.registerCorsConfiguration("/**", config);
         return source;
     }
-
-
-    @Bean
-    public AuthenticationManager authenticationManager() {
-        DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
-        authProvider.setUserDetailsService(userDetailsService);
-        authProvider.setPasswordEncoder(encoder);
-        return new ProviderManager(authProvider);
-    }
-
-
-
-
-    /* Documentations
-    https://docs.spring.io/spring-security/site/docs/current/api/org/springframework/security/web/authentication/UsernamePasswordAuthenticationFilter.html
-
-    https://docs.spring.io/spring-security/site/docs/current/api/org/springframework/security/authentication/AuthenticationManager.html
-
-    https://docs.spring.io/spring-security/site/docs/current/api/org/springframework/security/authentication/AuthenticationProvider.html
-
-    https://docs.spring.io/spring-security/site/docs/current/api/org/springframework/security/authentication/dao/DaoAuthenticationProvider.html
-
-    https://docs.spring.io/spring-security/site/docs/current/api/org/springframework/security/authentication/dao/AbstractUserDetailsAuthenticationProvider.html
-    */
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
