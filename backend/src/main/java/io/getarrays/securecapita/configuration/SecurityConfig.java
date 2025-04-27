@@ -45,6 +45,8 @@ public class SecurityConfig {
     private final CustomAuthenticationEntryPoint customAuthenticationEntryPoint;
     private final UserDetailsService userDetailsService;
     private final CustomAuthorizationFilter customAuthorizationFilter;
+    private final CorsFilter corsFilter;
+
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
@@ -57,7 +59,7 @@ public class SecurityConfig {
         http.exceptionHandling(exception -> exception.accessDeniedHandler(customAccessDeniedHandler).authenticationEntryPoint(customAuthenticationEntryPoint));
         http.authorizeHttpRequests(request -> request.anyRequest().authenticated());
 
-        http.addFilterBefore(corsFilter(), CustomAuthorizationFilter.class); // <== AJOUTE CECI
+        http.addFilterBefore(corsFilter, CustomAuthorizationFilter.class); // <== AJOUTE CECI
         http.addFilterBefore(customAuthorizationFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
