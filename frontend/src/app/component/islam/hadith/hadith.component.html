@@ -1,50 +1,56 @@
-<div class="container-fluid min-vh-100 d-flex flex-column justify-content-center align-items-center bg-light">
-  <!-- Titre style header avec select -->
-  <div class="w-100 text-center mb-5">
-    <label class="form-label fs-3 fw-bold text-success">Catégorie</label>
-    <div class="mx-auto" style="max-width: 500px;">
-      <select class="form-select form-select-lg text-center fw-semibold border-success shadow"
+<div class="container-fluid min-vh-100 d-flex flex-column align-items-center bg-light" style="background: linear-gradient(to bottom right, #f0fdf4, #d9fbe7);">
+  <!-- Titre et Select -->
+  <div class="w-100 text-center mt-5 mb-4">
+    <label class="form-label fs-2 fw-bold text-success mb-3">Catégorie</label>
+    <div class="mx-auto" style="width: 50%;">
+      <select class="form-select form-select-lg text-center fw-semibold border-success shadow-sm"
               [(ngModel)]="myDropDown"
-              (ngModelChange)="onChangeofOptions($event)">
-        <option *ngFor="let cat of listeCategories" [value]="cat.id">{{cat.title}}</option>
+              (ngModelChange)="onChangeofOptions($event)"
+              style="transition: all 0.3s ease; box-shadow: 0 0 5px rgba(0, 128, 0, 0.3);">
+        <option *ngFor="let cat of listeCategories" [value]="cat.id">{{ cat.title }}</option>
       </select>
     </div>
   </div>
 
-  <!-- Liste des hadiths, une carte par ligne -->
+  <!-- Liste des hadiths -->
   <div class="w-100 px-3" style="max-width: 800px;">
     <div *ngFor="let had of listeHadiths; index as i"
          class="card mb-4 shadow-lg border-0 rounded-4 text-dark"
-         style="background: linear-gradient(135deg, #e6ffed, #ccf2d4);">
+         style="background: linear-gradient(135deg, #e6ffed, #ccf2d4); transition: transform 0.3s ease, box-shadow 0.3s ease;"
+         (mouseenter)="had.hover = true"
+         (mouseleave)="had.hover = false"
+         [style.transform]="had.hover ? 'scale(1.02)' : 'scale(1)'"
+         [style.boxShadow]="had.hover ? '0 6px 20px rgba(0, 128, 0, 0.3)' : '0 4px 10px rgba(0, 128, 0, 0.2)'">
 
       <div class="card-header bg-transparent d-flex justify-content-between align-items-center border-0">
-        <span class="badge bg-success rounded-pill px-3 py-2">{{i + 1}} / {{listeHadiths.length}}</span>
+        <span class="badge bg-success rounded-pill px-3 py-2">{{ i + 1 }} / {{ listeHadiths.length }}</span>
       </div>
 
       <div class="card-body text-center">
-        <h5 class="card-title fw-bold mb-3">{{had.title}}</h5>
+        <h5 class="card-title fw-bold mb-3">{{ had.title }}</h5>
         <button class="btn btn-outline-success px-4" (click)="openDialog(had)">📖 Détail</button>
       </div>
     </div>
   </div>
 
-  <!-- Modal vert -->
-  <div class="modal fade show d-block" tabindex="-1" *ngIf="isDialogOpen" (click)="closeDialog()" style="background-color: rgba(0,0,0,0.6);">
+  <!-- Modal avec fond flouté -->
+  <div class="modal fade show d-block" tabindex="-1" *ngIf="isDialogOpen" (click)="closeDialog()"
+       style="background-color: rgba(0,0,0,0.5); backdrop-filter: blur(6px); transition: backdrop-filter 0.3s ease;">
     <div class="modal-dialog modal-lg modal-dialog-centered" (click)="$event.stopPropagation()">
-      <div class="modal-content rounded-4 shadow-lg">
+      <div class="modal-content rounded-4 shadow-lg" style="transition: all 0.3s ease;">
         <div class="modal-header bg-success text-white">
-          <h5 class="modal-title">{{selectedHadith?.title}}</h5>
+          <h5 class="modal-title">{{ selectedHadith?.title }}</h5>
           <button type="button" class="btn-close btn-close-white" aria-label="Close" (click)="closeDialog()"></button>
         </div>
         <div class="modal-body">
-          <p class="mb-3">{{selectedHadith?.hadeeth}}</p>
+          <p class="mb-3">{{ selectedHadith?.hadeeth }}</p>
           <hr>
-          <p><strong>Attribution :</strong> {{selectedHadith?.attribution}}</p>
-          <p><strong>Grade :</strong> {{selectedHadith?.grade}}</p>
+          <p><strong>Attribution :</strong> {{ selectedHadith?.attribution }}</p>
+          <p><strong>Grade :</strong> {{ selectedHadith?.grade }}</p>
           <hr>
-          <p class="text-end" dir="rtl" lang="ar">{{selectedHadith?.hadeeth_ar}}</p>
-          <p dir="rtl" lang="ar"><strong>Explication :</strong> {{selectedHadith?.explanation_ar}}</p>
-          <p dir="rtl" lang="ar"><strong>Grade :</strong> {{selectedHadith?.grade_ar}}</p>
+          <p class="text-end" dir="rtl" lang="ar">{{ selectedHadith?.hadeeth_ar }}</p>
+          <p dir="rtl" lang="ar"><strong>Explication :</strong> {{ selectedHadith?.explanation_ar }}</p>
+          <p dir="rtl" lang="ar"><strong>Grade :</strong> {{ selectedHadith?.grade_ar }}</p>
         </div>
         <div class="modal-footer">
           <button class="btn btn-outline-success" (click)="closeDialog()">Fermer</button>

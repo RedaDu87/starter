@@ -1,0 +1,190 @@
+/* ---- Background général ---- */
+body {
+  background: linear-gradient(180deg, #ffffff, #e9f9f1);
+  min-height: 100vh;
+  font-family: 'Poppins', sans-serif;
+  transition: background 1s ease;
+}
+
+/* ---- Variante : fond animé (option) ---- */
+/*
+body {
+  background: linear-gradient(-45deg, #f3fdf8, #e1f5ec, #f3fdf8, #e1f5ec);
+  background-size: 400% 400%;
+  animation: backgroundFlow 15s ease infinite;
+}
+@keyframes backgroundFlow {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+*/
+
+/* ---- Liste des versets ---- */
+.list-group-item {
+  background: #ffffff;
+  border: none;
+  transition: all 0.4s ease;
+}
+
+/* Verset actuellement lu */
+.verset-courant {
+  background: linear-gradient(135deg, #e0f7e9, #c2f0d4);
+  border: 2px solid #28a745;
+  border-radius: 12px;
+  padding: 1rem;
+  box-shadow: 0 0 15px rgba(40, 167, 69, 0.3);
+  animation: fadeIn 0.8s ease;
+}
+
+/* Animation sur changement de verset */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* --- Boutons flottants --- */
+.floating-buttons {
+  position: fixed;
+  bottom: 100px;
+  right: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  z-index: 9998;
+}
+
+.lecteur-btn {
+  width: 50px;
+  height: 50px;
+  font-size: 22px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  box-shadow: 0px 4px 8px rgba(0,0,0,0.2);
+  opacity: 1; /* <= Important pour éviter le blanchiment */
+  transition: all 0.3s ease;
+  position: relative;
+  color: white;
+}
+
+/* Couleur par bouton */
+.lecteur-btn-ar {
+  background-color: #28a745; /* Vert */
+}
+.lecteur-btn-fr {
+  background-color: #007bff; /* Bleu */
+}
+.lecteur-btn-arfr {
+  background-color: #17a2b8; /* Turquoise */
+}
+
+/* Hover personnalisé pour CHAQUE bouton */
+.lecteur-btn-ar:hover {
+  background-color: #34c759; /* Un vert plus clair au hover */
+  transform: scale(1.1);
+}
+
+.lecteur-btn-fr:hover {
+  background-color: #3399ff; /* Un bleu plus clair au hover */
+  transform: scale(1.1);
+}
+
+.lecteur-btn-arfr:hover {
+  background-color: #20c1d8; /* Un turquoise plus clair au hover */
+  transform: scale(1.1);
+}
+
+/* Petits badges "ar", "fr", "ar/fr" */
+.lecteur-badge {
+  position: absolute;
+  bottom: 2px;
+  right: 2px;
+  font-size: 10px;
+  background: white;
+  color: #333;
+  border-radius: 5px;
+  padding: 1px 4px;
+}
+
+/* Animation pulse pour bouton actif */
+.pulse-arabe, .pulse-francais, .pulse-arfr {
+  animation: pulseActive 1.5s infinite;
+}
+
+@keyframes pulseActive {
+  0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(255,255,255,0.7); }
+  50% { transform: scale(1.1); box-shadow: 0 0 15px rgba(40, 167, 69, 0.5); }
+  100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(255,255,255,0.7); }
+}
+
+/* ---- Bouton retour haut / reset ---- */
+.back-to-top {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  width: 60px;
+  height: 60px;
+  font-size: 24px;
+  z-index: 9999;
+  border-radius: 50%;
+  background-color: #28a745;
+  color: white;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transition: all 0.4s ease;
+}
+
+.back-to-top:hover {
+  transform: scale(1.1);
+  background-color: #218838;
+}
+/* --- Loader de chargement --- */
+.loader-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(255, 255, 255, 0.9);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 99999;
+}
+
+.spinner {
+  width: 50px;
+  height: 50px;
+  border: 6px solid #28a745;
+  border-top: 6px solid transparent;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+/* Animation de rotation du loader */
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* --- Barre de progression top --- */
+.progress-bar-top {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 4px;
+  width: 100%;
+  background: linear-gradient(90deg, #28a745, #17a2b8);
+  background-size: 200% 100%;
+  animation: moveProgress 2s linear infinite;
+  z-index: 9999;
+}
+
+/* Animation vague sur la progress bar */
+@keyframes moveProgress {
+  0% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}

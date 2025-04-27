@@ -1,4 +1,6 @@
-import { AfterViewInit, Component, ElementRef, QueryList, ViewChild, ViewChildren } from '@angular/core';
+// coran.component.ts PROPRE ET CORRIGÉ
+
+import { AfterViewInit, Component, ElementRef, QueryList, ViewChildren } from '@angular/core';
 import { Sourate } from '../model/sourate.modele';
 import { Aya } from '../model/aya.modele';
 import { AlquranService } from '../services/coran/alquran.service';
@@ -9,303 +11,269 @@ import { Router } from '@angular/router';
   templateUrl: './coran.component.html',
   styleUrls: ['./coran.component.css']
 })
-export class CoranComponent implements AfterViewInit{
-
+export class CoranComponent implements AfterViewInit {
 
   @ViewChildren('ayaElement') ayaElements!: QueryList<ElementRef>;
 
   isArabChecked = true;
   isFrChecked = true;
   isTransChecked = false;
-  title : any = "";
+  isPlayingArabe = false;
+  isPlayingFrancais = false;
+  isPlayingArFr = false;
+  showBackToTop = false;
+  iconBouncing = false;
+  currentLang: 'arabe' | 'francais' | 'arfr' = 'arabe';
 
-  listeSourah : any = [];
 
-  sourahNumber : number = 1;
+  sourah: Sourate = new Sourate();
+  aya: Aya = new Aya();
+  listeSourah: any = [];
+  isLoading: boolean = true;  // Nouveau champ
+  myDropDown: string = "1";
+  sourahNumber: number = 1;
 
-  donnee :any= 'coranconsumer';
+  audioObj: HTMLAudioElement | null = null;
+  audioTable: HTMLAudioElement[] = [];
+  currentAyaIndex: number = 0;
+  currentAudioIndex: number = 0;
+  audioMode: 'ar' | 'fr' | 'arfr' | null = null;
 
-  sourah : Sourate = new Sourate();
-
-  aya : Aya = new Aya();
-
-  myDropDown : string = "1";
-  ayaSelect :string = "";
-  currentIndex = 0; // L'index du verset actuellement joué
-
-  onChangeofOptions(newGov: any) {
-    if (this.audioTable.length !=0) this.pauseaya();
-    console.log("+++++++",this.myDropDown);
-     this.currentIndex = 0;
-    this.sourahNumber = newGov;
-    this.sourah = new Sourate();
-    this.getSourate();
-    this.audioTable.forEach(i => i = null);
-    this.audioTable = new Array();
-    this.goToAnchor1();
-
-}
-
-constructor( public alquranService : AlquranService,private router: Router){}
-  ngAfterViewInit(): void {
-
-    this.goToAnchor1();
+  constructor(public alquranService: AlquranService, private router: Router) {
+    window.addEventListener('scroll', () => {
+      this.showBackToTop = window.scrollY > 300;
+    });
   }
-
 
   ngOnInit(): void {
-    this.ayaSelect= "https://cdn.islamic.network/quran/audio/128/ar.hudhaify/2.mp3";
-
+    this.isLoading = true;
     this.alquranService.getSouratesList().subscribe({
-      next : (datas)=> {
-              this.listeSourah = datas;
-              this.listeSourah.data.sort(function (a: any, b: any) {
-                return b.number - a.number;
-            });
+      next: (datas) => {
+        this.listeSourah = datas;
+        this.listeSourah.data.sort((a: any, b: any) => b.number - a.number);
       },
-      error : ()=>{},
-      complete : ()=>{
-      this.getSourate();
-
+      complete: () => {
+        this.getSourate();
+        this.isLoading = false; // <-- Le loader disparaît
       }
     });
-
-
-
-
-
   }
 
 
-  getSourate(){
+
+
+  ngAfterViewInit(): void {
+    this.scrollToAya(0);
+  }
+
+  onChangeofOptions(newSourah: any) {
+    this.pauseaya();
+    this.sourahNumber = newSourah;
+    this.currentAyaIndex = 0;
+    this.currentAudioIndex = 0;
+    this.getSourate();
+  }
+
+  getSourate() {
+    this.pauseaya();
+    this.sourah = new Sourate();
+    this.audioTable = [];
+
     this.alquranService.getExemple(this.sourahNumber).subscribe({
-      next : (datas)=> {
-        this.sourah.title = datas.data[0].name+" - "+datas.data[0].englishName;
-        datas.data[0].ayahs.forEach((x: any,index : number)=>{
-          this.aya = new Aya();
-          // this.aya = new Aya(
-          //   x.text,
-          //   datas.data[2].ayahs[index].text,
-          //   x.audio,
-          //   datas.data[1].ayahs[index].audio
-          //   );
-          console.log(index);
+      next: (datas) => {
+        const info = datas.data[0];
+        this.sourah.title = info.name + ' - ' + info.englishName;
 
-          this.aya.audioAr = x.audio;
-          this.aya.ayaAr = x.text;
-          this.aya.ayatr = datas.data[1].ayahs[index].text;
-          this.aya.audioFr = datas.data[2].ayahs[index].audio;
-          this.aya.ayaFr = datas.data[3].ayahs[index].text;
-          this.sourah.ayas.push(this.aya);
-
+        info.ayahs.forEach((x: any, index: number) => {
+          const aya = new Aya();
+          aya.audioAr = x.audio;
+          aya.ayaAr = x.text;
+          aya.ayatr = datas.data[1].ayahs[index].text;
+          aya.audioFr = datas.data[2].ayahs[index].audio;
+          aya.ayaFr = datas.data[3].ayahs[index].text;
+          this.sourah.ayas.push(aya);
         });
-        //this.ayaSelect = this.sourah.ayas[0].audioAr;
-        console.log(this.ayaSelect);
-
-      },
-      error : ()=>{},
-      complete : ()=>{
-        console.log(this.sourah);
-
       }
     });
   }
 
-  sourateSuivante(){
-    this.sourahNumber++;
-    if (this.sourahNumber > 114){
-      this.sourahNumber = 1;
-    }
-    this.myDropDown = this.sourahNumber.toString();
-    this.sourah = new Sourate();
-    this.getSourate();
-  }
-
-  souratePrecedante(){
-    this.sourahNumber--;
-    if (this.sourahNumber < 1){
-      this.sourahNumber = 114;
-    }
-    this.myDropDown = this.sourahNumber.toString();
-    this.sourah = new Sourate();
-    this.getSourate();
-  }
-
-  private audioObj = new Audio();
-  audioplayer : any;
-  promessePlay :any;
-
-  audioTable : any[] = new Array();
-
-
-
-
-  // Appeler cette méthode après chaque changement de verset
   playayaAr() {
-    if (this.audioTable.length != 0) this.pauseaya();
-    this.audioTable.forEach(i => i = null);
-    this.audioTable.length = 0;
-    this.currentIndex = 0;
+    if (this.audioMode !== 'ar') {
+      this.pauseaya();
+      this.prepareAudioList('ar');
+    }
+    this.togglePlayPause();
+  }
 
-    this.sourah.ayas.forEach((item, index) => {
-      this.audioObj = new Audio();
-      this.audioObj.src = item.audioAr;
-      this.audioTable.push(this.audioObj);
+  playayaFr() {
+    if (this.audioMode !== 'fr') {
+      this.pauseaya();
+      this.prepareAudioList('fr');
+    }
+    this.togglePlayPause();
+  }
 
-      // Quand l'audio se termine, jouer le suivant et scroller
-      this.audioTable[index].addEventListener('ended', () => {
+  playayaArFr() {
+    if (this.audioMode !== 'arfr') {
+      this.pauseaya();
+      this.prepareAudioList('arfr');
+    }
+    this.togglePlayPause();
+  }
+
+  prepareAudioList(mode: 'ar' | 'fr' | 'arfr') {
+    this.audioTable = [];
+    this.audioMode = mode;
+
+    this.sourah.ayas.forEach((aya) => {
+      if (mode === 'ar') this.audioTable.push(new Audio(aya.audioAr));
+      if (mode === 'fr') this.audioTable.push(new Audio(aya.audioFr));
+      if (mode === 'arfr') {
+        this.audioTable.push(new Audio(aya.audioAr));
+        this.audioTable.push(new Audio(aya.audioFr));
+      }
+    });
+
+    this.setAudioEvents();
+  }
+
+  setAudioEvents() {
+    this.audioTable.forEach((audio, index) => {
+      audio.addEventListener('ended', () => {
         if (index + 1 < this.audioTable.length) {
+          if (this.audioMode === 'arfr' && index % 2 === 1) {
+            this.currentAyaIndex++;
+            this.scrollToAya(this.currentAyaIndex);
+          } else if (this.audioMode !== 'arfr') {
+            this.currentAyaIndex++;
+            this.scrollToAya(this.currentAyaIndex);
+          }
           this.audioTable[index + 1].play();
-          this.currentIndex = index + 1;
-          this.scrollToAya(this.currentIndex);  // Scroll vers le prochain verset
+        } else {
+          this.isPlayingArabe = false;
+          this.isPlayingFrancais = false;
+          this.isPlayingArFr = false;
         }
       });
     });
-
-    this.audioTable[0].play();
-    this.scrollToAya(0);  // Scroll vers le premier verset
   }
 
-playayaFr() {
-  if (this.audioTable.length != 0) this.pauseaya();
-  this.audioTable.forEach(i => i = null);
-  this.audioTable.length = 0;
-  this.currentIndex = 0;
+  togglePlayPause() {
+    if (this.audioTable.length === 0) return;
 
-  this.sourah.ayas.forEach((item, index) => {
-    this.audioObj = new Audio();
-    this.audioObj.src = item.audioFr;
-    this.audioTable.push(this.audioObj);
+    const current = this.audioMode === 'arfr' ? this.currentAyaIndex * 2 : this.currentAyaIndex;
 
-    // Quand l'audio se termine, jouer le suivant et scroller
-    this.audioTable[index].addEventListener('ended', () => {
-      if (index + 1 < this.audioTable.length) {
-        this.audioTable[index + 1].play();
-        this.currentIndex = index + 1;
-        this.scrollToAya(this.currentIndex);  // Scroll vers le prochain verset
-      }
-    });
-  });
-
-  this.audioTable[0].play();
-  this.scrollToAya(0);  // Scroll vers le premier verset
-  }
-
-pauseaya(){
-  console.log(this.currentIndex);
-
-  this.audioTable[this.currentIndex].pause();
-}
-
-reprendreaya(){
-  if (this.audioTable.length !=0) this.pauseaya();
-    this.audioTable.forEach(i => i = null);
-    this.audioTable.length =0;
-
-    this.sourah.ayas.forEach((item)=>{
-        this.audioObj = new Audio();
-       this.audioObj.src = item.audioAr;
-
-       this.audioTable.push(this.audioObj);
-    });
-
-    for (let i =0; i < this.audioTable.length;i++){
-      this.audioTable[i].addEventListener('ended', () => {
-        this.audioTable[i+1].play();
-        this.currentIndex++;
-            console.log(this.audioTable[i+1]);
-            this.goToAnchor1();
-          });
-
+    if (this.audioTable[current]?.paused) {
+      this.audioTable[current].play();
+      this.isPlayingArabe = this.audioMode === 'ar';
+      this.isPlayingFrancais = this.audioMode === 'fr';
+      this.isPlayingArFr = this.audioMode === 'arfr';
+    } else {
+      this.audioTable[current]?.pause();
+      this.isPlayingArabe = false;
+      this.isPlayingFrancais = false;
+      this.isPlayingArFr = false;
     }
-  this.audioTable[this.currentIndex].play();
-}
+  }
 
+  pauseaya() {
+    this.audioTable.forEach(audio => {
+      audio.pause();
+      audio.currentTime = 0;
+    });
+    this.isPlayingArabe = false;
+    this.isPlayingFrancais = false;
+    this.isPlayingArFr = false;
+  }
 
-
-goToAnchor1() {
-  this.router.navigate(['/coran'], { fragment: (this.currentIndex+1).toString() });
-}
-
-  // Méthode pour faire défiler vers le verset en cours
   scrollToAya(index: number) {
-    const ayaElement = this.ayaElements.toArray()[index];
-    if (ayaElement) {
-      ayaElement.nativeElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    const ayaElement = this.ayaElements?.toArray()[index];
+    ayaElement?.nativeElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  }
+
+  scrollToTop() {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+    this.pauseaya();
+    this.currentAyaIndex = 0;
+    this.currentAudioIndex = 0;
+  }
+
+  isAnyPlaying(): boolean {
+    return this.isPlayingArabe || this.isPlayingFrancais || this.isPlayingArFr;
+  }
+  togglePlayAya(index: number, langue: 'ar' | 'fr') {
+    // Si c'est le même verset + même langue
+    if (this.currentAyaIndex === index && this.audioMode === langue && this.audioTable.length > 0) {
+      const currentAudio = this.audioTable[0];
+      if (currentAudio.paused) {
+        currentAudio.play();
+        this.isPlayingArabe = langue === 'ar';
+        this.isPlayingFrancais = langue === 'fr';
+      } else {
+        currentAudio.pause();
+        this.isPlayingArabe = false;
+        this.isPlayingFrancais = false;
+      }
+      return;
+    }
+
+    // Sinon (nouveau verset ou nouvelle langue)
+    this.pauseaya();
+
+    this.currentAyaIndex = index;
+    this.audioMode = langue;
+    this.audioTable = [];
+
+    const aya = this.sourah.ayas[index];
+    let audio: HTMLAudioElement;
+
+    if (langue === 'ar') {
+      audio = new Audio(aya.audioAr);
+      this.isPlayingArabe = true;
+      this.isPlayingFrancais = false;
+      this.isPlayingArFr = false;
+    } else {
+      audio = new Audio(aya.audioFr);
+      this.isPlayingFrancais = true;
+      this.isPlayingArabe = false;
+      this.isPlayingArFr = false;
+    }
+
+    this.audioTable.push(audio);
+
+    audio.addEventListener('ended', () => {
+      this.isPlayingArabe = false;
+      this.isPlayingFrancais = false;
+      this.isPlayingArFr = false;
+    });
+
+    audio.play();
+  }
+
+
+
+
+  reprendreaya() {
+    if (!this.audioTable || this.audioTable.length === 0) {
+      return;
+    }
+
+    if (this.isPlayingArabe || this.isPlayingFrancais || this.isPlayingArFr) {
+      // Si déjà en lecture => pas besoin de relancer
+      return;
+    }
+
+    if (this.currentLang === 'arabe' || this.currentLang === 'francais') {
+      // Cas Arabe ou Français simple
+      if (this.audioTable[this.currentAyaIndex]) {
+        this.audioTable[this.currentAyaIndex].play();
+      }
+    } else if (this.currentLang === 'arfr') {
+      // Cas Alterné Arabe / Français
+      if (this.audioTable[this.currentAudioIndex]) {
+        this.audioTable[this.currentAudioIndex].play();
+      }
     }
   }
 
-
-
-playanayaAr(i :number){
-  if (this.audioTable.length !=0) this.pauseaya();
-  this.audioTable.forEach(i => i = null);
-  this.audioTable.length =0;
-  this.currentIndex = 0;
-  this.sourah.ayas.forEach((item)=>{
-      this.audioObj = new Audio();
-     this.audioObj.src = item.audioAr;
-
-     this.audioTable.push(this.audioObj);
-  });
-  if (this.audioTable.length !=0) this.pauseaya();
-
-  this.sourah.ayas.forEach((item)=>{
-    this.audioObj = new Audio();
-   this.audioObj.src = item.audioAr;
-
-   this.audioTable.push(this.audioObj);
-});
-this.currentIndex =i;
-console.log(this.audioTable[i+1]);
-// this.goToAnchor1();
-this.audioTable[i].addEventListener('ended', () => {
-  this.audioTable[i+1].pause();
-
-    });
-    this.audioTable[i].currentTime = 0;
-  this.audioTable[i].play();
-
 }
-
-playanayaFr(i :number){
-  if (this.audioTable.length !=0) this.pauseaya();
-    this.audioTable.forEach(i => i = null);
-    this.audioTable.length =0;
-    this.currentIndex = 0;
-    this.sourah.ayas.forEach((item)=>{
-        this.audioObj = new Audio();
-       this.audioObj.src = item.audioFr;
-
-       this.audioTable.push(this.audioObj);
-    });
-
-
-  if (this.audioTable.length !=0) this.pauseaya();
-
-  this.sourah.ayas.forEach((item)=>{
-    this.audioObj = new Audio();
-   this.audioObj.src = item.audioFr;
-
-   this.audioTable.push(this.audioObj);
-});
-this.currentIndex =i;
-console.log(this.audioTable[i+1]);
-// this.goToAnchor1();
-this.audioTable[i].addEventListener('ended', () => {
-  this.audioTable[i+1].pause();
-
-    });
-    this.audioTable[i].currentTime = 0;
-  this.audioTable[i].play();
-
-}
-
-
-  }
-
-
-
-
-
-

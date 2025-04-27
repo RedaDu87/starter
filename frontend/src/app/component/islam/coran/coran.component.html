@@ -1,36 +1,25 @@
-<div class="container-fluid min-vh-100 py-5 bg-light">
+<!-- FULLSCREEN CORAN UI REVISITEE -->
+
+<div class="w-100 min-vh-100 py-5 bg-light px-4">
+
   <!-- Sélection de la sourate -->
   <div class="text-center mb-5">
-    <h2 class="text-success fw-bold mb-4">📖 Sélectionner une Sourate</h2>
-    <div class="mx-auto" style="max-width: 600px;">
-      <select id="sourahSelect" class="form-select form-select-lg shadow border-success fw-semibold text-center"
-              [(ngModel)]="myDropDown"
-              (ngModelChange)="onChangeofOptions($event)">
-        <option *ngFor="let sourah of listeSourah.data" [value]="sourah.number">
-          {{ sourah.name }} - {{ sourah.number }} - {{ sourah.englishName }}
-        </option>
-      </select>
+    <h2 class="text-success fw-bold mb-4 animate-fadein">📖 Sélectionner une Sourate</h2>
+    <div class="w-100 d-flex justify-content-center">
+      <div style="width: 100%; max-width: 600px;">
+        <select id="sourahSelect" class="form-select form-select-lg shadow border-success fw-semibold text-center"
+                [(ngModel)]="myDropDown"
+                (ngModelChange)="onChangeofOptions($event)">
+          <option *ngFor="let sourah of listeSourah.data" [value]="sourah.number">
+            {{ sourah.name }} - {{ sourah.number }} - {{ sourah.englishName }}
+          </option>
+        </select>
+      </div>
     </div>
   </div>
 
-  <!-- Contrôles audio -->
-  <div class="d-flex flex-wrap justify-content-center gap-3 mb-4">
-    <button class="btn btn-success px-4" (click)="playayaAr()">
-      ▶️ Arabe
-    </button>
-    <button class="btn btn-secondary px-4" (click)="playayaFr()">
-      ▶️ Français
-    </button>
-    <button class="btn btn-warning px-4" (click)="pauseaya()">
-      ⏸️ Pause
-    </button>
-    <button class="btn btn-outline-success px-4" (click)="reprendreaya()">
-      🔄 Reprendre
-    </button>
-  </div>
-
   <!-- Options d'affichage -->
-  <div class="d-flex justify-content-center gap-4 mb-5">
+  <div class="d-flex justify-content-center gap-4 mb-5 animate-fadein">
     <div class="form-check">
       <input class="form-check-input" type="checkbox" id="arab" [(ngModel)]="isArabChecked">
       <label class="form-check-label fw-semibold" for="arab">Arabe</label>
@@ -46,37 +35,64 @@
   </div>
 
   <!-- Liste des versets -->
-  <div class="list-group mx-auto" style="max-width: 900px;" *ngIf="sourah">
-    <div class="list-group-item bg-white shadow-sm rounded mb-4 px-4 py-3" *ngFor="let aya of sourah.ayas; index as i" id="{{i+1}}" #ayaElement>
+  <div class="list-group w-100 animate-fadein" *ngIf="sourah">
+    <div class="list-group-item rounded shadow-sm mb-4 px-4 py-3"
+         *ngFor="let aya of sourah.ayas; index as i" id="{{i+1}}" #ayaElement>
+
       <p class="mb-2 text-muted text-end">Verset {{ i + 1 }} / {{ sourah.ayas.length }}</p>
 
       <!-- Arabe -->
       <div *ngIf="isArabChecked"
-           [ngStyle]="i === currentIndex ? {'background-color': '#d4edda', 'padding': '1rem', 'border-radius': '0.5rem'} : {}"
-           class="d-flex justify-content-between align-items-center mb-3">
-        <p class="flex-grow-1 text-end" dir="rtl" lang="ar" style="font-size: 1.4rem;">{{ aya.ayaAr }}</p>
-        <button class="btn btn-outline-success btn-sm ms-3" (click)="playanayaAr(i)">
-          🔁
+           [ngClass]="{'verset-courant': i === currentAyaIndex}"
+           class="aya-block d-flex justify-content-between align-items-center mb-3">
+        <p class="flex-grow-1 text-end" dir="rtl" lang="ar" style="font-size: 1.5rem;">{{ aya.ayaAr }}</p>
+        <button class="btn btn-outline-success btn-sm ms-3" (click)="togglePlayAya(i, 'ar')">
+          <i class="bi" [ngClass]="(currentAyaIndex === i && isPlayingArabe) ? 'bi-pause-fill' : 'bi-play-fill'"></i>
         </button>
       </div>
 
       <!-- Translittération -->
-      <div *ngIf="isTransChecked" class="d-flex justify-content-between align-items-center mb-3">
+      <div *ngIf="isTransChecked"
+           [ngClass]="{'verset-courant': i === currentAyaIndex}"
+           class="aya-block d-flex justify-content-between align-items-center mb-3">
         <p class="flex-grow-1 fst-italic">{{ aya.ayatr }}</p>
-        <button class="btn btn-outline-success btn-sm ms-3" (click)="playanayaAr(i)">
-          🔁
+        <button class="btn btn-outline-success btn-sm ms-3" (click)="togglePlayAya(i, 'ar')">
+          <i class="bi" [ngClass]="(currentAyaIndex === i && isPlayingArabe) ? 'bi-pause-fill' : 'bi-play-fill'"></i>
         </button>
       </div>
 
       <!-- Français -->
       <div *ngIf="isFrChecked"
-           [ngStyle]="i === currentIndex ? {'background-color': '#d4edda', 'padding': '1rem', 'border-radius': '0.5rem'} : {}"
-           class="d-flex justify-content-between align-items-center">
+           [ngClass]="{'verset-courant': i === currentAyaIndex}"
+           class="aya-block d-flex justify-content-between align-items-center">
         <p class="flex-grow-1">{{ aya.ayaFr }}</p>
-        <button class="btn btn-outline-success btn-sm ms-3" (click)="playanayaFr(i)">
-          🔁
+        <button class="btn btn-outline-success btn-sm ms-3" (click)="togglePlayAya(i, 'fr')">
+          <i class="bi" [ngClass]="(currentAyaIndex === i && isPlayingFrancais) ? 'bi-pause-fill' : 'bi-play-fill'"></i>
         </button>
       </div>
+
+    </div>
   </div>
+
 </div>
+
+<!-- Boutons flottants modernisés -->
+<div class="floating-buttons">
+  <button class="btn btn-light lecteur-btn lecteur-btn-ar" [ngClass]="{'pulse-arabe': isPlayingArabe}" (click)="playayaAr()">
+    <i class="bi" [ngClass]="isPlayingArabe ? 'bi-pause-fill' : 'bi-play-fill'"></i>
+    <small class="lecteur-badge">ar</small>
+  </button>
+  <button class="btn btn-light lecteur-btn lecteur-btn-fr" [ngClass]="{'pulse-francais': isPlayingFrancais}" (click)="playayaFr()">
+    <i class="bi" [ngClass]="isPlayingFrancais ? 'bi-pause-fill' : 'bi-play-fill'"></i>
+    <small class="lecteur-badge">fr</small>
+  </button>
+  <button class="btn btn-light lecteur-btn lecteur-btn-arfr" [ngClass]="{'pulse-arfr': isPlayingArFr}" (click)="playayaArFr()">
+    <i class="bi" [ngClass]="isPlayingArFr ? 'bi-pause-fill' : 'bi-play-fill'"></i>
+    <small class="lecteur-badge">ar/fr</small>
+  </button>
 </div>
+
+<!-- Bouton retour haut -->
+<button class="btn btn-success rounded-circle shadow-lg back-to-top pulse-on-click" (click)="scrollToTop()" title="Remonter en haut ou Reset lecture">
+  <i class="bi" [ngClass]="[(isAnyPlaying() ? 'bi-stop-fill' : 'bi-arrow-up'), iconBouncing ? 'bounce-icon' : '']"></i>
+</button>

@@ -38,13 +38,12 @@ export class HadithComponent implements OnInit {
         this.listeCategories.forEach((element) => {
           if (element.id == this.categorieNumber) this.title = element.title;
         });
-        this.getListHadithByCategorie();
       }
     });
   }
 
-  onChangeofOptions(newGov: any) {
-    this.categorieNumber = newGov;
+  onChangeofOptions(newCategorieId: any) {
+    this.categorieNumber = newCategorieId;
     this.listeHadiths = [];
     this.getListHadithByCategorie();
   }
@@ -63,9 +62,9 @@ export class HadithComponent implements OnInit {
           hadith.hadeeth_ar = element.hadeeth_ar;
           hadith.explanation_ar = element.explanation_ar;
           hadith.grade_ar = element.grade_ar;
+          hadith.hover = false; // 🔥 On initialise hover ici !
           return hadith;
         });
-        
       }
     });
   }
@@ -82,7 +81,8 @@ export class HadithComponent implements OnInit {
           explanation: data.explanation,
           hadeeth_ar: data.hadeeth_ar,
           explanation_ar: data.explanation_ar,
-          grade_ar: data.grade_ar
+          grade_ar: data.grade_ar,
+          hover: false // 🔥 Même dans le modal, initialiser hover pour éviter les erreurs
         };
         this.isDialogOpen = true;
       }
