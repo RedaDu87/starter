@@ -108,4 +108,3 @@ volumes:
 
 networks:
   securecapita_net:
-    driver: overlay
