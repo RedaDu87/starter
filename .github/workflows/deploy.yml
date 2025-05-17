@@ -83,16 +83,16 @@ jobs:
             set -e
 
             echo "🔐 Logging into Docker"
-            docker login -u "${{ secrets.DOCKER_USERNAME }}" -p "${{ secrets.DOCKER_PASSWORD }}"
+            sudo docker login -u "${{ secrets.DOCKER_USERNAME }}" -p "${{ secrets.DOCKER_PASSWORD }}"
 
             echo "📦 Pulling latest changes from Git"
             cd /home/${{ secrets.SSH_USER }}/securecapita
             git pull origin main
 
             echo "🐳 Pulling latest images"
-            docker pull ${{ secrets.DOCKER_USERNAME }}/securecapita-backend
-            docker pull ${{ secrets.DOCKER_USERNAME }}/securecapita-frontend
+            sudo docker pull ${{ secrets.DOCKER_USERNAME }}/securecapita-backend
+            sudo docker pull ${{ secrets.DOCKER_USERNAME }}/securecapita-frontend
 
             echo "🚀 Deploying stack to Docker Swarm"
-            docker stack deploy -c docker-compose.yml securecapita
+            sudo docker stack deploy -c docker-compose.yml securecapita
           EOF
