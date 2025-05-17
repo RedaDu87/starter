@@ -45,9 +45,9 @@ jobs:
         working-directory: ./frontend
         run: |
           npm install
-          npm run build 
+          npm run build
 
-      - name: Build Spring Boot backend with Maven
+      - name: Build Spring Boot backend
         working-directory: ./backend
         run: mvn clean package -DskipTests
 
@@ -56,7 +56,7 @@ jobs:
           docker build -t ${{ secrets.DOCKER_USERNAME }}/securecapita-backend ./backend
           docker build -t ${{ secrets.DOCKER_USERNAME }}/securecapita-frontend ./frontend
 
-      - name: Log in to DockerHub
+      - name: Login to DockerHub
         run: echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
 
       - name: Push Docker images
@@ -75,18 +75,24 @@ jobs:
       - name: Install SSH client
         run: sudo apt-get install -y sshpass
 
-      - name: Deploy to remote host via SSH
+      - name: Deploy to Docker Swarm via SSH
         env:
           SSHPASS: ${{ secrets.SSH_PASS }}
         run: |
           sshpass -e ssh -o StrictHostKeyChecking=no ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} << EOF
+            set -e
+
+            echo "🔐 Logging into Docker"
             docker login -u "${{ secrets.DOCKER_USERNAME }}" -p "${{ secrets.DOCKER_PASSWORD }}"
 
+            echo "📦 Pulling latest changes from Git"
             cd /home/${{ secrets.SSH_USER }}/securecapita
-
             git pull origin main
 
-            sudo docker compose down
-            sudo docker compose pull
-            sudo docker compose up -d --remove-orphans
+            echo "🐳 Pulling latest images"
+            docker pull ${{ secrets.DOCKER_USERNAME }}/securecapita-backend
+            docker pull ${{ secrets.DOCKER_USERNAME }}/securecapita-frontend
+
+            echo "🚀 Deploying stack to Docker Swarm"
+            docker stack deploy -c docker-compose.yml securecapita
           EOF
