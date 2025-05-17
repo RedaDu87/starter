@@ -73,7 +73,10 @@ public class SecurityConfig {
         config.setAllowedOriginPatterns(List.of(
                 "http://localhost:4200",
                 "http://coran-hadith.fr",
-                "http://api.coran-hadith.fr"
+                "http://api.coran-hadith.fr",
+                "https://localhost:4200",
+                "https://coran-hadith.fr",
+                "https://api.coran-hadith.fr"
         ));
         config.setAllowedHeaders(List.of("*")); // 🔥 autorise tous les headers
         config.setAllowedMethods(List.of("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS")); // 🔥 toutes méthodes
