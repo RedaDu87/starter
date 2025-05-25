@@ -113,6 +113,12 @@ services:
     networks:
       - securecapita_net
     deploy:
+      labels:
+        - "traefik.enable=true"
+        - "traefik.http.routers.prosody.rule=Host(`meet.coran-hadith.fr`) && PathPrefix(`/xmpp-websocket`)"
+        - "traefik.http.routers.prosody.entrypoints=websecure"
+        - "traefik.http.routers.prosody.tls.certresolver=myresolver"
+        - "traefik.http.services.prosody.loadbalancer.server.port=5280"
       replicas: 1
       restart_policy:
         condition: any
@@ -123,7 +129,7 @@ services:
         - ENABLE_AUTH=0
         - ENABLE_GUESTS=1
         - XMPP_DOMAIN=meet.coran-hadith.fr
-        - XMPP_BOSH_URL_BASE=http://jitsi-prosody:5280/http-bind
+        - XMPP_BOSH_URL_BASE=https://meet.coran-hadith.fr/http-bind
         - XMPP_SERVER=jitsi-prosody
         - PUBLIC_URL=https://meet.coran-hadith.fr
       networks:
@@ -138,6 +144,8 @@ services:
           - "traefik.http.routers.jitsi.entrypoints=websecure"
           - "traefik.http.routers.jitsi.tls.certresolver=myresolver"
           - "traefik.http.services.jitsi.loadbalancer.server.port=80"
+          - "traefik.http.routers.jitsi.middlewares=websocket"
+          - "traefik.http.middlewares.websocket.headers.customrequestheaders.X-Forwarded-Proto=https"
 
   jitsi-jicofo:
       image: jitsi/jicofo:stable
