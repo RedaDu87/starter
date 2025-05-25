@@ -118,54 +118,66 @@ services:
         condition: any
 
   jitsi-web:
-    image: jitsi/web:stable
-    environment:
-      - ENABLE_AUTH=0
-      - ENABLE_GUESTS=1
-      - XMPP_DOMAIN=meet.coran-hadith.fr
-      - XMPP_BOSH_URL_BASE=http://jitsi-prosody:5280
-      - XMPP_SERVER=jitsi-prosody
-      - PUBLIC_URL=https://meet.coran-hadith.fr
-    networks:
-      - securecapita_net
-    deploy:
-      replicas: 1
-      restart_policy:
-        condition: any
-      labels:
-        - "traefik.enable=true"
-        - "traefik.http.routers.jitsi.rule=Host(`meet.coran-hadith.fr`)"
-        - "traefik.http.routers.jitsi.entrypoints=websecure"
-        - "traefik.http.routers.jitsi.tls.certresolver=myresolver"
-        - "traefik.http.services.jitsi.loadbalancer.server.port=80"
+      image: jitsi/web:stable
+      environment:
+        - ENABLE_AUTH=0
+        - ENABLE_GUESTS=1
+        - XMPP_DOMAIN=meet.coran-hadith.fr
+        - XMPP_BOSH_URL_BASE=http://jitsi-prosody:5280/http-bind
+        - XMPP_SERVER=jitsi-prosody
+        - PUBLIC_URL=https://meet.coran-hadith.fr
+      networks:
+        - securecapita_net
+      deploy:
+        replicas: 1
+        restart_policy:
+          condition: any
+        labels:
+          - "traefik.enable=true"
+          - "traefik.http.routers.jitsi.rule=Host(`meet.coran-hadith.fr`)"
+          - "traefik.http.routers.jitsi.entrypoints=websecure"
+          - "traefik.http.routers.jitsi.tls.certresolver=myresolver"
+          - "traefik.http.services.jitsi.loadbalancer.server.port=80"
 
   jitsi-jicofo:
-    image: jitsi/jicofo:stable
-    environment:
-      - XMPP_DOMAIN=meet.coran-hadith.fr
-      - XMPP_AUTH_DOMAIN=auth.meet.coran-hadith.fr
-      - XMPP_INTERNAL_MUC_DOMAIN=internal-muc.meet.coran-hadith.fr
-      - JICOFO_COMPONENT_SECRET=s3cr3t
-      - JICOFO_AUTH_PASSWORD=s3cr3t
-    networks:
-      - securecapita_net
-    deploy:
-      replicas: 1
-      restart_policy:
-        condition: any
+      image: jitsi/jicofo:stable
+      environment:
+        - XMPP_DOMAIN=meet.coran-hadith.fr
+        - XMPP_AUTH_DOMAIN=auth.meet.coran-hadith.fr
+        - XMPP_INTERNAL_MUC_DOMAIN=internal-muc.meet.coran-hadith.fr
+        - JICOFO_COMPONENT_SECRET=s3cr3t
+        - JICOFO_AUTH_PASSWORD=s3cr3t
+      networks:
+        - securecapita_net
+      deploy:
+        replicas: 1
+        restart_policy:
+          condition: any
 
   jitsi-jvb:
-    image: jitsi/jvb:stable
-    environment:
-      - XMPP_AUTH_PASSWORD=s3cr3t
-      - XMPP_INTERNAL_MUC_DOMAIN=internal-muc.meet.coran-hadith.fr
-      - DOCKER_HOST_ADDRESS=127.0.0.1
-    networks:
-      - securecapita_net
-    deploy:
-      replicas: 1
-      restart_policy:
-        condition: any
+      image: jitsi/jvb:stable
+      environment:
+        - XMPP_AUTH_PASSWORD=s3cr3t
+        - XMPP_INTERNAL_MUC_DOMAIN=internal-muc.meet.coran-hadith.fr
+        # Remplace par ton IP serveur publique ou Docker interne, pas 127.0.0.1
+        - DOCKER_HOST_ADDRESS=5.135.149.37
+        - JVB_PORT=10000
+        - JVB_TCP_HARVESTER_PORT=4443
+      ports:
+        - target: 10000
+          published: 10000
+          protocol: udp
+          mode: host
+        - target: 4443
+          published: 4443
+          protocol: tcp
+          mode: host
+      networks:
+        - securecapita_net
+      deploy:
+        replicas: 1
+        restart_policy:
+          condition: any
 
 volumes:
   mariadb_data:
