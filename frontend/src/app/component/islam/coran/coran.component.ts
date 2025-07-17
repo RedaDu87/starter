@@ -97,45 +97,40 @@ export class CoranComponent implements AfterViewInit {
     });
   }
 
-  playayaAr() {
-    if (this.audioMode !== 'ar') {
-      this.pauseaya();
-      this.prepareAudioList('ar');
-    }
-    this.togglePlayPause();
-  }
+playayaAr() {
+  if (this.audioMode !== 'ar') this.prepareAudioList('ar');
+  this.currentAyaIndex = 0;
+  this.playCurrentAudio(0);
+}
 
-  playayaFr() {
-    if (this.audioMode !== 'fr') {
-      this.pauseaya();
-      this.prepareAudioList('fr');
-    }
-    this.togglePlayPause();
-  }
+playayaFr() {
+  if (this.audioMode !== 'fr') this.prepareAudioList('fr');
+  this.currentAyaIndex = 0;
+  this.playCurrentAudio(0);
+}
 
-  playayaArFr() {
-    if (this.audioMode !== 'arfr') {
-      this.pauseaya();
-      this.prepareAudioList('arfr');
-    }
-    this.togglePlayPause();
-  }
+playayaArFr() {
+  if (this.audioMode !== 'arfr') this.prepareAudioList('arfr');
+  this.currentAyaIndex = 0;
+  this.playCurrentAudio(0);
+}
 
-  prepareAudioList(mode: 'ar' | 'fr' | 'arfr') {
-    this.audioTable = [];
-    this.audioMode = mode;
 
-    this.sourah.ayas.forEach((aya) => {
-      if (mode === 'ar') this.audioTable.push(new Audio(aya.audioAr));
-      if (mode === 'fr') this.audioTable.push(new Audio(aya.audioFr));
-      if (mode === 'arfr') {
-        this.audioTable.push(new Audio(aya.audioAr));
-        this.audioTable.push(new Audio(aya.audioFr));
-      }
-    });
+  // prepareAudioList(mode: 'ar' | 'fr' | 'arfr') {
+  //   this.audioTable = [];
+  //   this.audioMode = mode;
 
-    this.setAudioEvents();
-  }
+  //   this.sourah.ayas.forEach((aya) => {
+  //     if (mode === 'ar') this.audioTable.push(new Audio(aya.audioAr));
+  //     if (mode === 'fr') this.audioTable.push(new Audio(aya.audioFr));
+  //     if (mode === 'arfr') {
+  //       this.audioTable.push(new Audio(aya.audioAr));
+  //       this.audioTable.push(new Audio(aya.audioFr));
+  //     }
+  //   });
+
+  //   this.setAudioEvents();
+  // }
 
   setAudioEvents() {
     this.audioTable.forEach((audio, index) => {
@@ -175,16 +170,15 @@ export class CoranComponent implements AfterViewInit {
       this.isPlayingArFr = false;
     }
   }
-
-  pauseaya() {
-    this.audioTable.forEach(audio => {
-      audio.pause();
-      audio.currentTime = 0;
-    });
-    this.isPlayingArabe = false;
-    this.isPlayingFrancais = false;
-    this.isPlayingArFr = false;
+  
+pauseaya() {
+  if (this.audioObj) {
+    this.audioObj.pause();
+    this.audioObj.currentTime = 0;
   }
+  this.resetPlaybackStates();
+}
+
 
   scrollToAya(index: number) {
     const ayaElement = this.ayaElements?.toArray()[index];
@@ -201,54 +195,20 @@ export class CoranComponent implements AfterViewInit {
   isAnyPlaying(): boolean {
     return this.isPlayingArabe || this.isPlayingFrancais || this.isPlayingArFr;
   }
+
   togglePlayAya(index: number, langue: 'ar' | 'fr') {
-    // Si c'est le même verset + même langue
-    if (this.currentAyaIndex === index && this.audioMode === langue && this.audioTable.length > 0) {
-      const currentAudio = this.audioTable[0];
-      if (currentAudio.paused) {
-        currentAudio.play();
-        this.isPlayingArabe = langue === 'ar';
-        this.isPlayingFrancais = langue === 'fr';
-      } else {
-        currentAudio.pause();
-        this.isPlayingArabe = false;
-        this.isPlayingFrancais = false;
-      }
-      return;
-    }
+  this.cleanAllAudio();
+  this.audioMode = langue;
+  this.currentAyaIndex = index;
 
-    // Sinon (nouveau verset ou nouvelle langue)
-    this.pauseaya();
+  const aya = this.sourah.ayas[index];
+  const audioSrc = langue === 'ar' ? aya.audioAr : aya.audioFr;
+  const audio = new Audio(audioSrc);
 
-    this.currentAyaIndex = index;
-    this.audioMode = langue;
-    this.audioTable = [];
+  this.audioTable.push(audio);
+  this.playCurrentAudio(0);
+}
 
-    const aya = this.sourah.ayas[index];
-    let audio: HTMLAudioElement;
-
-    if (langue === 'ar') {
-      audio = new Audio(aya.audioAr);
-      this.isPlayingArabe = true;
-      this.isPlayingFrancais = false;
-      this.isPlayingArFr = false;
-    } else {
-      audio = new Audio(aya.audioFr);
-      this.isPlayingFrancais = true;
-      this.isPlayingArabe = false;
-      this.isPlayingArFr = false;
-    }
-
-    this.audioTable.push(audio);
-
-    audio.addEventListener('ended', () => {
-      this.isPlayingArabe = false;
-      this.isPlayingFrancais = false;
-      this.isPlayingArFr = false;
-    });
-
-    audio.play();
-  }
 
 
 
@@ -275,5 +235,74 @@ export class CoranComponent implements AfterViewInit {
       }
     }
   }
+
+  private cleanAllAudio() {
+  this.audioTable.forEach(audio => {
+    audio.pause();
+    audio.currentTime = 0;
+    audio.src = '';
+  });
+  this.audioTable = [];
+  this.audioObj = null;
+  this.isPlayingArabe = false;
+  this.isPlayingFrancais = false;
+  this.isPlayingArFr = false;
+  this.audioMode = null;
+}
+
+private playCurrentAudio(index: number) {
+  if (!this.audioTable[index]) return;
+
+  const audio = this.audioTable[index];
+  this.audioObj = audio;
+
+  audio.onended = () => {
+    const nextIndex = index + 1;
+    if (nextIndex < this.audioTable.length) {
+      if (this.audioMode === 'arfr') {
+        if (nextIndex % 2 === 0) {
+          this.currentAyaIndex++;
+          this.scrollToAya(this.currentAyaIndex);
+        }
+      } else {
+        this.currentAyaIndex++;
+        this.scrollToAya(this.currentAyaIndex);
+      }
+      this.playCurrentAudio(nextIndex);
+    } else {
+      this.resetPlaybackStates();
+    }
+  };
+
+  audio.play();
+  this.updatePlaybackStates();
+}
+
+private updatePlaybackStates() {
+  this.isPlayingArabe = this.audioMode === 'ar';
+  this.isPlayingFrancais = this.audioMode === 'fr';
+  this.isPlayingArFr = this.audioMode === 'arfr';
+}
+
+private resetPlaybackStates() {
+  this.isPlayingArabe = false;
+  this.isPlayingFrancais = false;
+  this.isPlayingArFr = false;
+}
+
+private prepareAudioList(mode: 'ar' | 'fr' | 'arfr') {
+  this.cleanAllAudio();
+  this.audioMode = mode;
+
+  this.sourah.ayas.forEach((aya) => {
+    if (mode === 'ar') this.audioTable.push(new Audio(aya.audioAr));
+    else if (mode === 'fr') this.audioTable.push(new Audio(aya.audioFr));
+    else if (mode === 'arfr') {
+      this.audioTable.push(new Audio(aya.audioAr));
+      this.audioTable.push(new Audio(aya.audioFr));
+    }
+  });
+}
+
 
 }
