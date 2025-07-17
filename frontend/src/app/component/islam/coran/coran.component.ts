@@ -348,7 +348,7 @@ private prepareAudioList(mode: 'ar' | 'fr' | 'arfr') {
 }
 floatingButtonPosition = {
   position: 'fixed',
-  bottom: '20px',
+  bottom: '200px',
   right: '20px',
   zIndex: 9999
 };
