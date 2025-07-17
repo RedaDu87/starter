@@ -77,7 +77,11 @@
 </div>
 
 <!-- Boutons flottants modernisés -->
-<div class="floating-buttons">
+<div class="floating-buttons"
+     [ngStyle]="floatingButtonPosition"
+     draggable="true"
+     (dragstart)="onDragStart($event)"
+     (dragend)="onDragEnd($event)">
   <button class="btn btn-light lecteur-btn lecteur-btn-ar" [ngClass]="{'pulse-arabe': isPlayingArabe}" (click)="playayaAr()">
     <i class="bi" [ngClass]="isPlayingArabe ? 'bi-pause-fill' : 'bi-play-fill'"></i>
     <small class="lecteur-badge">ar</small>

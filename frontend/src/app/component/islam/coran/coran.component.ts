@@ -346,7 +346,38 @@ private prepareAudioList(mode: 'ar' | 'fr' | 'arfr') {
     }
   });
 }
+floatingButtonPosition = {
+  position: 'fixed',
+  bottom: '20px',
+  right: '20px',
+  zIndex: 9999
+};
 
+private offsetX = 0;
+private offsetY = 0;
+
+onDragStart(event: DragEvent) {
+  if (event.clientX && event.clientY) {
+    this.offsetX = event.clientX;
+    this.offsetY = event.clientY;
+  }
+}
+
+onDragEnd(event: DragEvent) {
+  if (event.clientX && event.clientY) {
+    const deltaX = event.clientX - this.offsetX;
+    const deltaY = event.clientY - this.offsetY;
+
+    const currentRight = parseInt(this.floatingButtonPosition.right.toString(), 10);
+    const currentBottom = parseInt(this.floatingButtonPosition.bottom.toString(), 10);
+
+    this.floatingButtonPosition = {
+      ...this.floatingButtonPosition,
+      right: `${Math.max(currentRight - deltaX, 0)}px`,
+      bottom: `${Math.max(currentBottom - deltaY, 0)}px`
+    };
+  }
+}
 
 
 }
