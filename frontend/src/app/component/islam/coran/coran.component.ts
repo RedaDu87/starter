@@ -153,24 +153,19 @@ playayaArFr() {
     });
   }
 
-  togglePlayPause() {
-    if (this.audioTable.length === 0) return;
+togglePlayPause() {
+  if (!this.audioObj) return;
 
-    const current = this.audioMode === 'arfr' ? this.currentAyaIndex * 2 : this.currentAyaIndex;
-
-    if (this.audioTable[current]?.paused) {
-      this.audioTable[current].play();
-      this.isPlayingArabe = this.audioMode === 'ar';
-      this.isPlayingFrancais = this.audioMode === 'fr';
-      this.isPlayingArFr = this.audioMode === 'arfr';
-    } else {
-      this.audioTable[current]?.pause();
-      this.isPlayingArabe = false;
-      this.isPlayingFrancais = false;
-      this.isPlayingArFr = false;
-    }
+  if (this.audioObj.paused) {
+    this.audioObj.play();
+    this.updatePlaybackStates();
+  } else {
+    this.audioObj.pause();
+    this.resetPlaybackStates();
   }
-  
+}
+
+
 pauseaya() {
   if (this.audioObj) {
     this.audioObj.pause();
@@ -196,7 +191,21 @@ pauseaya() {
     return this.isPlayingArabe || this.isPlayingFrancais || this.isPlayingArFr;
   }
 
-  togglePlayAya(index: number, langue: 'ar' | 'fr') {
+  
+togglePlayAya(index: number, langue: 'ar' | 'fr') {
+  // Si c'est le même verset et même langue, toggle pause/play
+  if (this.currentAyaIndex === index && this.audioMode === langue && this.audioObj) {
+    if (this.audioObj.paused) {
+      this.audioObj.play();
+      this.updatePlaybackStates();
+    } else {
+      this.audioObj.pause();
+      this.resetPlaybackStates();
+    }
+    return;
+  }
+
+  // Nouveau verset ou langue => préparer un nouvel audio
   this.cleanAllAudio();
   this.audioMode = langue;
   this.currentAyaIndex = index;
@@ -205,9 +214,15 @@ pauseaya() {
   const audioSrc = langue === 'ar' ? aya.audioAr : aya.audioFr;
   const audio = new Audio(audioSrc);
 
-  this.audioTable.push(audio);
-  this.playCurrentAudio(0);
+  this.audioObj = audio;
+  this.audioTable = [audio];
+
+  audio.addEventListener('ended', () => this.resetPlaybackStates());
+
+  audio.play();
+  this.updatePlaybackStates();
 }
+
 
 
 
