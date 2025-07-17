@@ -98,22 +98,50 @@ export class CoranComponent implements AfterViewInit {
   }
 
 playayaAr() {
-  if (this.audioMode !== 'ar') this.prepareAudioList('ar');
-  this.currentAyaIndex = 0;
-  this.playCurrentAudio(0);
+  if (this.audioMode === 'ar' && this.audioObj) {
+    this.togglePlayPause();
+  } else {
+    this.prepareAudioList('ar');
+    const index = this.currentAyaIndex;
+    this.playCurrentAudio(index);
+  }
+  if (this.audioObj?.paused) {
+  this.audioObj.play();
+  this.updatePlaybackStates();
+}
+
 }
 
 playayaFr() {
-  if (this.audioMode !== 'fr') this.prepareAudioList('fr');
-  this.currentAyaIndex = 0;
-  this.playCurrentAudio(0);
+  if (this.audioMode === 'fr' && this.audioObj) {
+    this.togglePlayPause();
+  } else {
+    this.prepareAudioList('fr');
+    const index = this.currentAyaIndex;
+    this.playCurrentAudio(index);
+  }
+  if (this.audioObj?.paused) {
+  this.audioObj.play();
+  this.updatePlaybackStates();
+}
+
 }
 
 playayaArFr() {
-  if (this.audioMode !== 'arfr') this.prepareAudioList('arfr');
-  this.currentAyaIndex = 0;
-  this.playCurrentAudio(0);
+  if (this.audioMode === 'arfr' && this.audioObj) {
+    this.togglePlayPause();
+  } else {
+    this.prepareAudioList('arfr');
+    const index = this.currentAyaIndex * 2; // ar/fr = 2 audios par verset
+    this.playCurrentAudio(index);
+  }
+  if (this.audioObj?.paused) {
+  this.audioObj.play();
+  this.updatePlaybackStates();
 }
+
+}
+
 
 
   // prepareAudioList(mode: 'ar' | 'fr' | 'arfr') {
@@ -318,6 +346,7 @@ private prepareAudioList(mode: 'ar' | 'fr' | 'arfr') {
     }
   });
 }
+
 
 
 }
