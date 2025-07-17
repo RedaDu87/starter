@@ -105,11 +105,6 @@ playayaAr() {
     const index = this.currentAyaIndex;
     this.playCurrentAudio(index);
   }
-  if (this.audioObj?.paused) {
-  this.audioObj.play();
-  this.updatePlaybackStates();
-}
-
 }
 
 playayaFr() {
@@ -120,11 +115,6 @@ playayaFr() {
     const index = this.currentAyaIndex;
     this.playCurrentAudio(index);
   }
-  if (this.audioObj?.paused) {
-  this.audioObj.play();
-  this.updatePlaybackStates();
-}
-
 }
 
 playayaArFr() {
@@ -134,31 +124,10 @@ playayaArFr() {
     this.prepareAudioList('arfr');
     const index = this.currentAyaIndex * 2; // ar/fr = 2 audios par verset
     this.playCurrentAudio(index);
-  }
-  if (this.audioObj?.paused) {
-  this.audioObj.play();
-  this.updatePlaybackStates();
+  
 }
 
 }
-
-
-
-  // prepareAudioList(mode: 'ar' | 'fr' | 'arfr') {
-  //   this.audioTable = [];
-  //   this.audioMode = mode;
-
-  //   this.sourah.ayas.forEach((aya) => {
-  //     if (mode === 'ar') this.audioTable.push(new Audio(aya.audioAr));
-  //     if (mode === 'fr') this.audioTable.push(new Audio(aya.audioFr));
-  //     if (mode === 'arfr') {
-  //       this.audioTable.push(new Audio(aya.audioAr));
-  //       this.audioTable.push(new Audio(aya.audioFr));
-  //     }
-  //   });
-
-  //   this.setAudioEvents();
-  // }
 
   setAudioEvents() {
     this.audioTable.forEach((audio, index) => {
