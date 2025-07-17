@@ -14,7 +14,7 @@
           "builder": "@angular-devkit/build-angular:browser",
           "options": {
             "allowedCommonJsDependencies": [ "jspdf" ],
-            "outputPath": "dist/securecapitaapp",
+            "outputPath": "dist/securecapitaapp/browser",
             "index": "src/index.html",
             "main": "src/main.ts",
             "polyfills": [
@@ -102,6 +102,59 @@
               "node_modules/@fortawesome/fontawesome-free/js/all.min.js"
             ]
           }
+        },
+        "server": {
+          "builder": "@angular-devkit/build-angular:server",
+          "options": {
+            "outputPath": "dist/securecapitaapp/server",
+            "main": "server.ts",
+            "tsConfig": "tsconfig.server.json"
+          },
+          "configurations": {
+            "production": {
+              "outputHashing": "media"
+            },
+            "development": {
+              "optimization": false,
+              "sourceMap": true,
+              "extractLicenses": false,
+              "vendorChunk": true
+            }
+          },
+          "defaultConfiguration": "production"
+        },
+        "serve-ssr": {
+          "builder": "@nguniversal/builders:ssr-dev-server",
+          "configurations": {
+            "development": {
+              "browserTarget": "securecapitaapp:build:development",
+              "serverTarget": "securecapitaapp:server:development"
+            },
+            "production": {
+              "browserTarget": "securecapitaapp:build:production",
+              "serverTarget": "securecapitaapp:server:production"
+            }
+          },
+          "defaultConfiguration": "development"
+        },
+        "prerender": {
+          "builder": "@nguniversal/builders:prerender",
+          "options": {
+            "routes": [
+              "/"
+            ]
+          },
+          "configurations": {
+            "production": {
+              "browserTarget": "securecapitaapp:build:production",
+              "serverTarget": "securecapitaapp:server:production"
+            },
+            "development": {
+              "browserTarget": "securecapitaapp:build:development",
+              "serverTarget": "securecapitaapp:server:development"
+            }
+          },
+          "defaultConfiguration": "production"
         }
       }
     }
