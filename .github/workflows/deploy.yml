@@ -40,12 +40,16 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: '18'
-
-      - name: Build Angular frontend
+          
+      - name: Build Angular frontend with SSR
         working-directory: ./frontend
         run: |
-          npm install
-          npm run build
+          npm ci
+          npm run build:ssr
+
+      - name: Build Docker image (SSR)
+        run: docker build -t ${{ secrets.DOCKER_USERNAME }}/securecapita-frontend ./frontend
+
 
       - name: Build Spring Boot backend
         working-directory: ./backend
